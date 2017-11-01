@@ -299,17 +299,26 @@ In \sref{sec:wndeadtime} we show that, in the presence of dead time, the differe
 In \sref{sec:correction} we show that this can be used to recover the dead noise-free power spectrum.
 
 \section{Data simulation and analysis} \label{sec:data}
+All simulated and real data sets in this paper were produced and/or analyzed with a combination of the two Python libraries \texttt{stingray}%
+\footnote{The library is under heavy development.
+    For this work we used the version identified by the hash \texttt{XXXXXX}}
+\citep{huppenkothen2016} and \texttt{HENDRICS} v.\texttt{3.0b1} \citep[formerly known as MaLTPyNT;][]{2015ascl.soft02021B}, both based on Astropy \citep{astropy2013}.
+
 \subsection{Simulated datasets}
-All simulated data sets in this paper have been produced with a combination of the two Python libraries \texttt{stingray} \citep{huppenkothen2016} and \texttt{HENDRICS} \citep[formerly known as MaLTPyNT][]{2015ascl.soft02021B}, both based on Astropy \citep{astropy2013}.
-The \texttt{stingray.simulate.Simulator} class was used to simulate light curves with a given noise profile, 
-the \texttt{stingray.Eventlist.simulate\_times()} function was used to transform the light curves into event lists using rejection sampling, 
-and finally the \texttt{hendrics.fake.filter\_for\_deadtime()} function was used to apply a non-paralyzable dead time to the simulated event lists. For more details on the simulated data sets, see also Section \ref{sec:correction} and the available Jupyter notebooks\footnote{\href{https://github.com/matteobachetti/deadtime-paper-II}{https://github.com/matteobachetti/deadtime-paper-II}} \citep[for a description of Jupyter notebooks, see][]{kluyver2016jupyter}.
+We used the same procedure and algorithms described by \citet{Bachetti+15}, Section 4, that we briefly summarize here together with references to the methods and classes of the libraries above where these steps are implemented.
+The classes in \texttt{stingray.simulate} were used to simulate light curves with a given noise profile. 
+These classes use the \citet{timmer1995} method to create a noise-affected light curve starting from a given power spectral shape described by a powerlaw index, an \texttt{astropy} model or a list of arrays containing the frequency and power of the model spectrum.
+We then used an acceptance-rejection method to obtain simulated events from these light curves (\texttt{stingray.Eventlist.simulate\_times()}). 
+Finally, the \texttt{hendrics.fake.filter\_for\_deadtime()} function was used to apply a non-paralyzable dead time of 2.5\,ms to the simulated event lists. For more details on the simulated data sets, see also Section \ref{sec:correction} and the available Jupyter notebooks%
+\footnote{\href{https://github.com/matteobachetti/deadtime-paper-II}{https://github.com/matteobachetti/deadtime-paper-II}} \citep[for a description of Jupyter notebooks, see][]{kluyver2016jupyter}.
 
 \subsection{Cyg X-1 \nustar dataset}
-We downloaded the observation directory of ObsID 30001011009 (UT 2014-10-04) from the HEASARC using the custom \texttt{heasarc\_pipelines} package [ASCL in prep.]. 
+We downloaded the observation directory of \nustar ObsID 30001011009 (UT 2014-10-04) from the HEASARC using the custom \texttt{heasarc\_pipelines} package (Bachetti et al., ASCL identifier requested).
 Starting from the standard cleaned science event files distributed by HEASARC, we applied a barycenter correction using the FTOOL \texttt{barycorr} shipped with HEASOFT 6.21 with the clock correction file n. 71 from the \nustar CALDB.
 We selected photons in a region of 50\arcsec around the nominal position of Cyg X-1 using the FTOOL \texttt{fselect}.
-We used the scripts contained in \texttt{HENDRICS} to load the event lists for the two detectors FPMA and FPMB, calibrate them to translate the PI channels into energy values, and selected photons from 3 to 79 keV.
+We used the scripts contained in \texttt{HENDRICS} to load the event lists for the two detectors FPMA and FPMB, calibrate them to translate the PI channels into energy values, and produced light curves with photons from 3 to 79 keV%
+\footnote{This procedure uses the scripts \texttt{HENreadfile}, \texttt{HENcalibrate} and \texttt{HENlcurve}, as described at\\ \href{http://hendrics.readthedocs.io/en/master/tutorials/quicklook.html}{http://hendrics.readthedocs.io/en/master/tutorials/quicklook.html}}.
+
 
 \section{On the difference of Fourier amplitudes} \label{sec:fourierdiff}
 \begin{figure*}
@@ -347,7 +356,7 @@ A_{xj} - A_{yj} \sim \Normal(0, 2\sigma_{dj}^2 + 2\sigma_{n}^2) \; .
 
 \noindent The difference in Fourier amplitudes effectively separates the frequency-dependent effects of source variability and variability due to detector effects.
  
-\section{dead time-affected white noise} \label{sec:wndeadtime}
+\section{Dead time-affected white noise} \label{sec:wndeadtime}
 
 \begin{figure*}
 \gridline{\fig{imgs/fourier_vs_diff_dt}{0.3\textwidth}{(a)}
@@ -379,7 +388,7 @@ In general, we recommend smoothing over as many bins as allowed by the shape of 
 In this paper, when not specified we average over the number of bins contained in 1Hz of the spectrum.
 We call this procedure the \textbf{Fourier Amplitude Difference} (hereafter FAD) \textbf{correction}.
 
-The correction is depicted in Figure~\ref{fig:pds}, right. 
+The correction is depicted in Figure~\ref{fig:dist}, right. 
 Starting from a heavily distorted distribution of the powers, applying the FAD correction reinstates a remarkably correct distribution of powers, following the expected $\chi^2_2$ distribution \citep{Lewin+88} very closely.
 Analogously, the corrected cospectrum will follow the expected Laplace distribution.
 While the original dead time-affected cospectrum had a frequency-dependent modification to the rms level, the FAD-corrected cospectrum gets back to a frequency-independent shape, like in the dead time-free case.
@@ -486,89 +495,89 @@ MB is supported in part by the Italian Space Agency through agreement ASI-INAF n
 DH is supported by the James Arthur Postdoctoral Fellowship and the Moore-Sloan Data Science Environment at New York University.
 
 \bibliographystyle{aasjournal}
-%\bibliography{deadtime,papers3}
-\begin{thebibliography}{}
-\expandafter\ifx\csname natexlab\endcsname\relax\def\natexlab#1{#1}\fi
-\providecommand{\url}[1]{\href{#1}{#1}}
-
-\bibitem[{{Astropy Collaboration} {et~al.}(2013){Astropy Collaboration},
-  {Robitaille}, {Tollerud}, {Greenfield}, {Droettboom}, {Bray}, {Aldcroft},
-  {Davis}, {Ginsburg}, {Price-Whelan}, {Kerzendorf}, {Conley}, {Crighton},
-  {Barbary}, {Muna}, {Ferguson}, {Grollier}, {Parikh}, {Nair}, {Unther},
-  {Deil}, {Woillez}, {Conseil}, {Kramer}, {Turner}, {Singer}, {Fox}, {Weaver},
-  {Zabalza}, {Edwards}, {Azalee Bostroem}, {Burke}, {Casey}, {Crawford},
-  {Dencheva}, {Ely}, {Jenness}, {Labrie}, {Lim}, {Pierfederici}, {Pontzen},
-  {Ptak}, {Refsdal}, {Servillat}, \& {Streicher}}]{astropy2013}
-{Astropy Collaboration}, {Robitaille}, T.~P., {Tollerud}, E.~J., {et~al.} 2013,
-  \aap, 558, A33
-
-\bibitem[{Bachetti(2015)}]{2015ascl.soft02021B}
-Bachetti, M. 2015, Astrophysics Source Code Library, ascl:1502.021
-
-\bibitem[{Bachetti {et~al.}(2015)Bachetti, Harrison, Cook, Tomsick, Schmid,
-  Grefenstette, Barret, Boggs, Christensen, Craig, Fabian, F{\"u}rst, Gandhi,
-  Hailey, Kara, Maccarone, Miller, Pottschmidt, Stern, Uttley, Walton, Wilms,
-  \& Zhang}]{Bachetti+15}
-Bachetti, M., Harrison, F.~A., Cook, R., {et~al.} 2015, ApJ, 800, 109
-
-\bibitem[{Barret \& Vaughan(2012)}]{Barret+12}
-Barret, D., \& Vaughan, S. 2012, ApJ, 746, 131
-
-\bibitem[{Belloni \& Hasinger(1990)}]{BelloniHasinger90}
-Belloni, T., \& Hasinger, G. 1990, A{\&}A, 230, 103
-
-\bibitem[{Bowyer {et~al.}(1965)Bowyer, Byram, Chubb, \& Friedman}]{Bowyer+65}
-Bowyer, S., Byram, E.~T., Chubb, T.~A., \& Friedman, H. 1965, Astronomical
-  Observations from Space Vehicles, 23, 227
-
-\bibitem[{Gilfanov {et~al.}(2000)Gilfanov, Churazov, \&
-  Revnivtsev}]{Gilfanov+00}
-Gilfanov, M., Churazov, E., \& Revnivtsev, M. 2000, MNRAS, 316, 923
-
-\bibitem[{Grinberg {et~al.}(2013)Grinberg, Hell, Pottschmidt, B{\"o}ck, Nowak,
-  Rodriguez, Bodaghee, Cadolle~Bel, Case, Hanke, K{\"u}hnel, Markoff, Pooley,
-  Rothschild, Tomsick, Wilson-Hodge, \& Wilms}]{Grinberg+13}
-Grinberg, V., Hell, N., Pottschmidt, K., {et~al.} 2013, 554, 88
-
-\bibitem[{{Huppenkothen} {et~al.}(2016){Huppenkothen}, {Bachetti}, {Stevens},
-  {Migliari}, \& {Balm}}]{huppenkothen2016}
-{Huppenkothen}, D., {Bachetti}, M., {Stevens}, A.~L., {Migliari}, S., \&
-  {Balm}, P. 2016, {Stingray: Spectral-timing software}, Astrophysics Source
-  Code Library, , , ascl:1608.001
-
-\bibitem[{Huppenkothen {et~al.}(2017)Huppenkothen, Younes, Ingram, Kouveliotou,
-  G{\"o}{\u{g}}{\"u}{\c s}, Bachetti, Sanchez-Fernandez, Chenevez, Motta,
-  van~der Klis, Granot, Gehrels, Kuulkers, Tomsick, \&
-  Walton}]{Huppenkothen+17}
-Huppenkothen, D., Younes, G., Ingram, A., {et~al.} 2017, ApJ, 834, 90
-
-\bibitem[{Kluyver {et~al.}(2016)Kluyver, Ragan-Kelley, P{\'e}rez, Granger,
-  Bussonnier, Frederic, Kelley, Hamrick, Grout, Corlay,
-  {et~al.}}]{kluyver2016jupyter}
-Kluyver, T., Ragan-Kelley, B., P{\'e}rez, F., {et~al.} 2016, in ELPUB, 87--90
-
-\bibitem[{Leahy {et~al.}(1983)Leahy, Darbro, Elsner, Weisskopf, Kahn,
-  Sutherland, \& Grindlay}]{Leahy+83}
-Leahy, D.~A., Darbro, W., Elsner, R.~F., {et~al.} 1983, ApJ, 266, 160
-
-\bibitem[{Lewin {et~al.}(1988)Lewin, van Paradijs, \& van~der Klis}]{Lewin+88}
-Lewin, W. H.~G., van Paradijs, J., \& van~der Klis, M. 1988, SSRv, 46, 273
-
-\bibitem[{Miyamoto {et~al.}(1991)Miyamoto, Kimura, Kitamoto, Dotani, \&
-  Ebisawa}]{Miyamoto+91}
-Miyamoto, S., Kimura, K., Kitamoto, S., Dotani, T., \& Ebisawa, K. 1991, ApJ,
-  383, 784
-
-\bibitem[{Vikhlinin {et~al.}(1994)Vikhlinin, Churazov, \&
-  Gilfanov}]{Vikhlinin+94}
-Vikhlinin, A., Churazov, E., \& Gilfanov, M. 1994, 287, 73
-
-\bibitem[{Zhang {et~al.}(1995)Zhang, Jahoda, Swank, Morgan, \&
-  Giles}]{Zhang+95}
-Zhang, W., Jahoda, K., Swank, J.~H., Morgan, E.~H., \& Giles, A.~B. 1995, ApJ,
-  449, 930
-
-\end{thebibliography}
+\bibliography{deadtime,papers3}
+%\begin{thebibliography}{}
+%\expandafter\ifx\csname natexlab\endcsname\relax\def\natexlab#1{#1}\fi
+%\providecommand{\url}[1]{\href{#1}{#1}}
+%
+%\bibitem[{{Astropy Collaboration} {et~al.}(2013){Astropy Collaboration},
+%  {Robitaille}, {Tollerud}, {Greenfield}, {Droettboom}, {Bray}, {Aldcroft},
+%  {Davis}, {Ginsburg}, {Price-Whelan}, {Kerzendorf}, {Conley}, {Crighton},
+%  {Barbary}, {Muna}, {Ferguson}, {Grollier}, {Parikh}, {Nair}, {Unther},
+%  {Deil}, {Woillez}, {Conseil}, {Kramer}, {Turner}, {Singer}, {Fox}, {Weaver},
+%  {Zabalza}, {Edwards}, {Azalee Bostroem}, {Burke}, {Casey}, {Crawford},
+%  {Dencheva}, {Ely}, {Jenness}, {Labrie}, {Lim}, {Pierfederici}, {Pontzen},
+%  {Ptak}, {Refsdal}, {Servillat}, \& {Streicher}}]{astropy2013}
+%{Astropy Collaboration}, {Robitaille}, T.~P., {Tollerud}, E.~J., {et~al.} 2013,
+%  \aap, 558, A33
+%
+%\bibitem[{Bachetti(2015)}]{2015ascl.soft02021B}
+%Bachetti, M. 2015, Astrophysics Source Code Library, ascl:1502.021
+%
+%\bibitem[{Bachetti {et~al.}(2015)Bachetti, Harrison, Cook, Tomsick, Schmid,
+%  Grefenstette, Barret, Boggs, Christensen, Craig, Fabian, F{\"u}rst, Gandhi,
+%  Hailey, Kara, Maccarone, Miller, Pottschmidt, Stern, Uttley, Walton, Wilms,
+%  \& Zhang}]{Bachetti+15}
+%Bachetti, M., Harrison, F.~A., Cook, R., {et~al.} 2015, ApJ, 800, 109
+%
+%\bibitem[{Barret \& Vaughan(2012)}]{Barret+12}
+%Barret, D., \& Vaughan, S. 2012, ApJ, 746, 131
+%
+%\bibitem[{Belloni \& Hasinger(1990)}]{BelloniHasinger90}
+%Belloni, T., \& Hasinger, G. 1990, A{\&}A, 230, 103
+%
+%\bibitem[{Bowyer {et~al.}(1965)Bowyer, Byram, Chubb, \& Friedman}]{Bowyer+65}
+%Bowyer, S., Byram, E.~T., Chubb, T.~A., \& Friedman, H. 1965, Astronomical
+%  Observations from Space Vehicles, 23, 227
+%
+%\bibitem[{Gilfanov {et~al.}(2000)Gilfanov, Churazov, \&
+%  Revnivtsev}]{Gilfanov+00}
+%Gilfanov, M., Churazov, E., \& Revnivtsev, M. 2000, MNRAS, 316, 923
+%
+%\bibitem[{Grinberg {et~al.}(2013)Grinberg, Hell, Pottschmidt, B{\"o}ck, Nowak,
+%  Rodriguez, Bodaghee, Cadolle~Bel, Case, Hanke, K{\"u}hnel, Markoff, Pooley,
+%  Rothschild, Tomsick, Wilson-Hodge, \& Wilms}]{Grinberg+13}
+%Grinberg, V., Hell, N., Pottschmidt, K., {et~al.} 2013, 554, 88
+%
+%\bibitem[{{Huppenkothen} {et~al.}(2016){Huppenkothen}, {Bachetti}, {Stevens},
+%  {Migliari}, \& {Balm}}]{huppenkothen2016}
+%{Huppenkothen}, D., {Bachetti}, M., {Stevens}, A.~L., {Migliari}, S., \&
+%  {Balm}, P. 2016, {Stingray: Spectral-timing software}, Astrophysics Source
+%  Code Library, , , ascl:1608.001
+%
+%\bibitem[{Huppenkothen {et~al.}(2017)Huppenkothen, Younes, Ingram, Kouveliotou,
+%  G{\"o}{\u{g}}{\"u}{\c s}, Bachetti, Sanchez-Fernandez, Chenevez, Motta,
+%  van~der Klis, Granot, Gehrels, Kuulkers, Tomsick, \&
+%  Walton}]{Huppenkothen+17}
+%Huppenkothen, D., Younes, G., Ingram, A., {et~al.} 2017, ApJ, 834, 90
+%
+%\bibitem[{Kluyver {et~al.}(2016)Kluyver, Ragan-Kelley, P{\'e}rez, Granger,
+%  Bussonnier, Frederic, Kelley, Hamrick, Grout, Corlay,
+%  {et~al.}}]{kluyver2016jupyter}
+%Kluyver, T., Ragan-Kelley, B., P{\'e}rez, F., {et~al.} 2016, in ELPUB, 87--90
+%
+%\bibitem[{Leahy {et~al.}(1983)Leahy, Darbro, Elsner, Weisskopf, Kahn,
+%  Sutherland, \& Grindlay}]{Leahy+83}
+%Leahy, D.~A., Darbro, W., Elsner, R.~F., {et~al.} 1983, ApJ, 266, 160
+%
+%\bibitem[{Lewin {et~al.}(1988)Lewin, van Paradijs, \& van~der Klis}]{Lewin+88}
+%Lewin, W. H.~G., van Paradijs, J., \& van~der Klis, M. 1988, SSRv, 46, 273
+%
+%\bibitem[{Miyamoto {et~al.}(1991)Miyamoto, Kimura, Kitamoto, Dotani, \&
+%  Ebisawa}]{Miyamoto+91}
+%Miyamoto, S., Kimura, K., Kitamoto, S., Dotani, T., \& Ebisawa, K. 1991, ApJ,
+%  383, 784
+%
+%\bibitem[{Vikhlinin {et~al.}(1994)Vikhlinin, Churazov, \&
+%  Gilfanov}]{Vikhlinin+94}
+%Vikhlinin, A., Churazov, E., \& Gilfanov, M. 1994, 287, 73
+%
+%\bibitem[{Zhang {et~al.}(1995)Zhang, Jahoda, Swank, Morgan, \&
+%  Giles}]{Zhang+95}
+%Zhang, W., Jahoda, K., Swank, J.~H., Morgan, E.~H., \& Giles, A.~B. 1995, ApJ,
+%  449, 930
+%
+%\end{thebibliography}
 \end{document}
 
 % End of file `sample61.tex'.
