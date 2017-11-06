@@ -313,10 +313,14 @@ Finally, the \texttt{hendrics.fake.filter\_for\_deadtime()} function was used to
 \footnote{\href{https://github.com/matteobachetti/deadtime-paper-II}{https://github.com/matteobachetti/deadtime-paper-II}} \citep[for a description of Jupyter notebooks, see][]{kluyver2016jupyter}.
 
 \subsection{Cyg X-1 \nustar dataset}
-We downloaded the observation directory of \nustar ObsID 30001011009 (UT 2014-10-04) from the HEASARC using the custom \texttt{heasarc\_pipelines} package (Bachetti et al., ASCL identifier requested).
+We tested the method also on real data of several bright sources observed by \nustar.
+As an example, we report here one such test done on \nustar data of the black hole binary Cyg~X-1 together with the steps to reproduce our analysis, using the linked Jupyter notebook if needed.
+We downloaded the observation directory of \nustar ObsID 30001011009 (UT 2014-10-04) from the HEASARC using the custom \texttt{heasarc\_pipelines} package (Bachetti et al., ASCL identifier requested). 
+Equivalently, this download can be done using the online tools provided by HEASARC (e.g. \texttt{xamin}).
 Starting from the standard cleaned science event files distributed by HEASARC, we applied a barycenter correction using the FTOOL \texttt{barycorr} shipped with HEASOFT 6.21 with the clock correction file n. 71 from the \nustar CALDB.
-We selected photons in a region of 50\arcsec around the nominal position of Cyg X-1 using the FTOOL \texttt{fselect}.
-We used the scripts contained in \texttt{HENDRICS} to load the event lists for the two detectors FPMA and FPMB, calibrate them to translate the PI channels into energy values, and produced light curves with photons from 3 to 79 keV%
+We selected photons in a region of 50\arcsec around the nominal position of Cyg X-1 using the FTOOL \texttt{fselect}.%
+\footnote{To use the method on different sources, it is sufficient to download a different ObsID and change the region file containing the position of the source}.
+We used the scripts contained in \texttt{HENDRICS} to load the event lists for the two detectors FPMA and FPMB, calibrate them to translate the PI channels into energy values, and produced light curves with photons from 3 to 79 keV and binned with uniform time bins of 1/4096$\sim2.44\cdot10^{-4}$\,sec%
 \footnote{This procedure uses the scripts \texttt{HENreadfile}, \texttt{HENcalibrate} and \texttt{HENlcurve}, as described at\\ \href{http://hendrics.readthedocs.io/en/master/tutorials/quicklook.html}{http://hendrics.readthedocs.io/en/master/tutorials/quicklook.html}}.
 
 
@@ -335,7 +339,7 @@ Let us consider two identical and independent detectors observing the same varia
 
 \begin{eqnarray}
 A_{xj} &=& A_{xsj} + A_{xdj} + A_{xnj} \nonumber \\
-B_{xj} &=& B_{xsj} + A_{xdj} + B_{xnj} \, ,
+B_{xj} &=& B_{xsj} + B_{xdj} + B_{xnj} \, ,
 \end{eqnarray}
 
 \noindent where $A_{xsj}$ and $B_{xsj}$ denote the real and imaginary components of the signal power in the Fourier amplitudes,  $A_{xdj}$ and $B_{xdj}$ denote the variance introduced by dead time, and $A_{xnj}$ and $B_{xnj}$ similarly denote the white noise components in the Fourier amplitudes.

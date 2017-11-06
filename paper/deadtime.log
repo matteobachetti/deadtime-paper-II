@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2017.9.27)  31 OCT 2017 12:10
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2017.9.27)  6 NOV 2017 16:15
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -503,139 +503,134 @@ m/n/10 ). Fi-nally,
  []
 
 [2]
-Overfull \hbox (7.28706pt too wide) in paragraph at lines 320--320
+Overfull \hbox (7.28706pt too wide) in paragraph at lines 324--324
 [][]\OT1/cmr/m/n/8 http://hendrics.readthedocs.io/en/master/tutorials/quicklook
 .html[][]| 
  []
 
-
-Underfull \hbox (badness 1275) in paragraph at lines 316--321
-\OT1/cmr/m/n/10 stan-dard cleaned sci-ence event files dis-tributed by
- []
-
-<imgs/rn_fourierdiff.pdf, id=90, 722.7pt x 505.89pt>
+<imgs/rn_fourierdiff.pdf, id=91, 722.7pt x 505.89pt>
 File: imgs/rn_fourierdiff.pdf Graphic file (type pdf)
 
 <use imgs/rn_fourierdiff.pdf>
-Package pdftex.def Info: imgs/rn_fourierdiff.pdf used on input line 325.
+Package pdftex.def Info: imgs/rn_fourierdiff.pdf used on input line 329.
 (pdftex.def)             Requested size: 218.07646pt x 152.64815pt.
 
-<imgs/rn_fourierdiff_dt.pdf, id=91, 722.7pt x 505.89pt>
+<imgs/rn_fourierdiff_dt.pdf, id=92, 722.7pt x 505.89pt>
 File: imgs/rn_fourierdiff_dt.pdf Graphic file (type pdf)
 
 <use imgs/rn_fourierdiff_dt.pdf>
-Package pdftex.def Info: imgs/rn_fourierdiff_dt.pdf used on input line 325.
+Package pdftex.def Info: imgs/rn_fourierdiff_dt.pdf used on input line 329.
 (pdftex.def)             Requested size: 218.07646pt x 152.64815pt.
 
-<imgs/fourier_vs_diff_dt.pdf, id=95, 722.7pt x 505.89pt>
+<imgs/fourier_vs_diff_dt.pdf, id=96, 722.7pt x 505.89pt>
 File: imgs/fourier_vs_diff_dt.pdf Graphic file (type pdf)
 
 <use imgs/fourier_vs_diff_dt.pdf>
-Package pdftex.def Info: imgs/fourier_vs_diff_dt.pdf used on input line 364.
+Package pdftex.def Info: imgs/fourier_vs_diff_dt.pdf used on input line 368.
 (pdftex.def)             Requested size: 153.93678pt x 107.753pt.
 
-<imgs/pds_pdf.pdf, id=96, 750.805pt x 515.9275pt>
+<imgs/pds_pdf.pdf, id=97, 750.805pt x 515.9275pt>
 File: imgs/pds_pdf.pdf Graphic file (type pdf)
  <use imgs/pds_pdf.pdf>
-Package pdftex.def Info: imgs/pds_pdf.pdf used on input line 364.
+Package pdftex.def Info: imgs/pds_pdf.pdf used on input line 368.
 (pdftex.def)             Requested size: 153.93678pt x 105.77368pt.
 
-<imgs/cosp_pdf.pdf, id=97, 750.805pt x 515.9275pt>
+<imgs/cosp_pdf.pdf, id=98, 750.805pt x 515.9275pt>
 File: imgs/cosp_pdf.pdf Graphic file (type pdf)
  <use imgs/cosp_pdf.pdf>
-Package pdftex.def Info: imgs/cosp_pdf.pdf used on input line 364.
+Package pdftex.def Info: imgs/cosp_pdf.pdf used on input line 368.
 (pdftex.def)             Requested size: 153.93678pt x 105.77368pt.
 
 [3] [4 <./imgs/rn_fourierdiff.pdf> <./imgs/rn_fourierdiff_dt.pdf> <./imgs/fouri
 er_vs_diff_dt.pdf> <./imgs/pds_pdf.pdf> <./imgs/cosp_pdf.pdf>]
-<imgs/rednoise_rebin.pdf, id=152, 1043.9pt x 717.68124pt>
+<imgs/rednoise_rebin.pdf, id=154, 1043.9pt x 717.68124pt>
 File: imgs/rednoise_rebin.pdf Graphic file (type pdf)
 
 <use imgs/rednoise_rebin.pdf>
-Package pdftex.def Info: imgs/rednoise_rebin.pdf used on input line 401.
+Package pdftex.def Info: imgs/rednoise_rebin.pdf used on input line 405.
 (pdftex.def)             Requested size: 169.32968pt x 116.40826pt.
 
-<imgs/rednoise_rebin_zoom.pdf, id=153, 1043.9pt x 717.68124pt>
+<imgs/rednoise_rebin_zoom.pdf, id=155, 1043.9pt x 717.68124pt>
 File: imgs/rednoise_rebin_zoom.pdf Graphic file (type pdf)
 
 <use imgs/rednoise_rebin_zoom.pdf>
-Package pdftex.def Info: imgs/rednoise_rebin_zoom.pdf used on input line 401.
+Package pdftex.def Info: imgs/rednoise_rebin_zoom.pdf used on input line 405.
 (pdftex.def)             Requested size: 169.32968pt x 116.40826pt.
 
-<imgs/simu_rebin_log.pdf, id=154, 1043.9pt x 717.68124pt>
+<imgs/simu_rebin_log.pdf, id=156, 1043.9pt x 717.68124pt>
 File: imgs/simu_rebin_log.pdf Graphic file (type pdf)
 
 <use imgs/simu_rebin_log.pdf>
-Package pdftex.def Info: imgs/simu_rebin_log.pdf used on input line 401.
+Package pdftex.def Info: imgs/simu_rebin_log.pdf used on input line 405.
 (pdftex.def)             Requested size: 169.32968pt x 116.40826pt.
 
-<imgs/cygx1_soft_nustar_2_rebin.pdf, id=155, 750.805pt x 515.9275pt>
+<imgs/cygx1_soft_nustar_2_rebin.pdf, id=157, 750.805pt x 515.9275pt>
 File: imgs/cygx1_soft_nustar_2_rebin.pdf Graphic file (type pdf)
 
 <use imgs/cygx1_soft_nustar_2_rebin.pdf>
 Package pdftex.def Info: imgs/cygx1_soft_nustar_2_rebin.pdf used on input line 
-404.
+408.
 (pdftex.def)             Requested size: 169.32968pt x 116.3542pt.
 
-<imgs/cygx1_soft_nustar_2_rebin_zoom.pdf, id=156, 750.805pt x 515.9275pt>
+<imgs/cygx1_soft_nustar_2_rebin_zoom.pdf, id=158, 750.805pt x 515.9275pt>
 File: imgs/cygx1_soft_nustar_2_rebin_zoom.pdf Graphic file (type pdf)
 
 <use imgs/cygx1_soft_nustar_2_rebin_zoom.pdf>
 Package pdftex.def Info: imgs/cygx1_soft_nustar_2_rebin_zoom.pdf used on input 
-line 404.
+line 408.
 (pdftex.def)             Requested size: 169.32968pt x 116.3542pt.
 
-<imgs/cygx1_soft_nustar_2_rebin_log.pdf, id=157, 750.805pt x 515.9275pt>
+<imgs/cygx1_soft_nustar_2_rebin_log.pdf, id=159, 750.805pt x 515.9275pt>
 File: imgs/cygx1_soft_nustar_2_rebin_log.pdf Graphic file (type pdf)
 
 <use imgs/cygx1_soft_nustar_2_rebin_log.pdf>
 Package pdftex.def Info: imgs/cygx1_soft_nustar_2_rebin_log.pdf used on input l
-ine 404.
+ine 408.
 (pdftex.def)             Requested size: 169.32968pt x 116.3542pt.
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 428.
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 432.
 
 
 (/usr/share/texlive/texmf-dist/tex/latex/base/omscmr.fd
 File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 428.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 432.
 
-Underfull \hbox (badness 3148) in paragraph at lines 430--431
+Underfull \hbox (badness 3148) in paragraph at lines 434--435
 \OT1/cmr/m/n/10 chan-nels be-tween them and ob-tain the
  []
 
 
-Underfull \hbox (badness 1014) in paragraph at lines 432--433
+Underfull \hbox (badness 1014) in paragraph at lines 436--437
 \OT1/cmr/m/n/10 Fourier am-pli-tudes to cal-cu-late the pe-ri-
  []
 
 [5] [6 <./imgs/rednoise_rebin.pdf> <./imgs/rednoise_rebin_zoom.pdf> <./imgs/sim
 u_rebin_log.pdf> <./imgs/cygx1_soft_nustar_2_rebin.pdf> <./imgs/cygx1_soft_nust
 ar_2_rebin_zoom.pdf> <./imgs/cygx1_soft_nustar_2_rebin_log.pdf>]
-Underfull \hbox (badness 1057) in paragraph at lines 488--491
+Underfull \hbox (badness 1057) in paragraph at lines 492--495
 \OT1/cmr/m/n/10 and the cospec-trum works re-mark-ably well, al-low-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 488--491
+Underfull \hbox (badness 10000) in paragraph at lines 492--495
 [][]\OT1/cmr/m/n/10 https://github.com/matteobachetti/deadtime-paper-II[][]
  []
 
 (./deadtime.bbl) [7]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 581.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 585.
  (./deadtime.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 581.
-Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 581.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 585.
+Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 585.
  ) 
 Here is how much of TeX's memory you used:
- 8915 strings out of 494953
- 124329 string characters out of 6180977
+ 8918 strings out of 494953
+ 124373 string characters out of 6180977
  263028 words of memory out of 5000000
- 12033 multiletter control sequences out of 15000+600000
+ 12035 multiletter control sequences out of 15000+600000
  16373 words of font info for 64 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 36i,11n,37p,882b,339s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 36i,11n,37p,882b,337s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></us
 r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx8.pfb></usr/share
 /texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb></usr/share/texliv
@@ -658,10 +653,10 @@ s/type1/public/amsfonts/cm/cmsy7.pfb></usr/share/texlive/texmf-dist/fonts/type1
 nts/cm/cmti8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/
 cmtt10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt8.
 pfb>
-Output written on deadtime.pdf (7 pages, 1129871 bytes).
+Output written on deadtime.pdf (7 pages, 1131970 bytes).
 PDF statistics:
- 320 PDF objects out of 1000 (max. 8388607)
- 262 compressed objects within 3 object streams
- 50 named destinations out of 1000 (max. 500000)
+ 322 PDF objects out of 1000 (max. 8388607)
+ 264 compressed objects within 3 object streams
+ 51 named destinations out of 1000 (max. 500000)
  56 words of extra memory for PDF output out of 10000 (max. 10000000)
 
