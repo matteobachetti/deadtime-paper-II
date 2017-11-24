@@ -21,12 +21,15 @@ def _get_fourier_intv(lc, start_ind, end_ind):
 
     freq = scipy.fftpack.fftfreq(len(time), lc.dt)
     good = freq > 0
-# #     print("Bu", factor, countrate_factor, counts[:10], counts_r_out[:10], fourier[:10])
 
     return freq[good], fourier[good], fourier[good] * np.sqrt(2 / (np.sum(counts)))
 
 
-def FAD_power_spectra(lc1, lc2, segment_size, plot=False, smoothing_alg='gauss'):
+def FAD_power_spectra(lc1, lc2, segment_size, plot=False,
+                      smoothing_alg='gauss',
+                      smoothing_length=None):
+    if smoothing_length is None:
+        smoothing_length = segment_size * 3
     gti = cross_two_gtis(lc1.gti, lc2.gti)
     lc1.gti = gti
     lc2.gti = gti
@@ -49,11 +52,13 @@ def FAD_power_spectra(lc1, lc2, segment_size, plot=False, smoothing_alg='gauss')
     for start_ind, end_ind in zip(start_inds, end_inds):
         freq, f1, f1_leahy = _get_fourier_intv(lc1, start_ind, end_ind)
         freq, f2, f2_leahy = _get_fourier_intv(lc2, start_ind, end_ind)
-        freq, ftot, ftot_leahy = _get_fourier_intv(summed_lc, start_ind, end_ind)
+        freq, ftot, ftot_leahy = \
+            _get_fourier_intv(summed_lc, start_ind, end_ind)
         
         fourier_diff = f1_leahy - f2_leahy
         if smoothing_alg == 'gauss':
-            smooth_real = gaussian_filter1d(fourier_diff.real**2, segment_size * 3)
+            smooth_real = gaussian_filter1d(fourier_diff.real**2,
+                                            smoothing_length)
         elif smoothing_alg == 'spline':
             spl = UnivariateSpline(freq, fourier_diff.real**2, s=1)
             smooth_real = spl(freq.astype(np.float64))
@@ -74,10 +79,7 @@ def FAD_power_spectra(lc1, lc2, segment_size, plot=False, smoothing_alg='gauss')
         c = c / smooth_real * 2 
 
         if n == 0 and plot:
-
-#           plt.plot(freq, fourier_diff, zorder=10, lw=1)
             plt.plot(freq, smooth_real, zorder=10, lw=3)
-
             plt.plot(freq, f1_leahy, zorder=5, lw=1)
             plt.plot(freq, f2_leahy, zorder=5, lw=1)
 
@@ -86,8 +88,6 @@ def FAD_power_spectra(lc1, lc2, segment_size, plot=False, smoothing_alg='gauss')
         pds2 += p2
         cs += c
         n += 1
-        
-#         break
     
     return freq, pds1 / n, pds2 / n, cs / n, ptot / n
 
