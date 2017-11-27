@@ -2,8 +2,10 @@ from pandas import read_csv
 import matplotlib.pyplot as plt
 import numpy as np
 
+
 def plot_scatter_ratios(results, channel, toler_d_clean=0.01,
                             filter={}):
+
     plt.figure()
     plt.title(channel)
     plt.axhline(0.0, ls='-')
@@ -25,6 +27,7 @@ def plot_scatter_ratios(results, channel, toler_d_clean=0.01,
                    ' ({} - clean)/clean'.format(channel))
     plt.colorbar()
 
+
 def plot_all(file, toler_d_clean=0.01):
     results = read_csv(file)
 
@@ -32,6 +35,7 @@ def plot_all(file, toler_d_clean=0.01):
     plot_scatter_ratios(results, 'CS', toler_d_clean=toler_d_clean)
     plot_scatter_ratios(results, 'PDS 1', toler_d_clean=toler_d_clean)
     plot_scatter_ratios(results, 'PDStot', toler_d_clean=toler_d_clean)
+
 
 def pairplot(file, toler_d_clean=0.5):
     from seaborn import pairplot
@@ -42,9 +46,11 @@ def pairplot(file, toler_d_clean=0.5):
     g = pairplot(results[good_clean], hue="rate",
              plot_kws={"s": 5},
                  vars=['channel_ratio', 'fad_delta',
-                       'CS', 'PDS 1', 'PDStot'],size=1.7,
+                       'CS', 'PDS 1', 'PDStot'], size=1.7,
              palette="GnBu_d")
     g.fig.subplots_adjust(right=0.9, left=0.1)
+    return g.fig
+
 
 def scatter_matrix(file, toler_d_clean=0.5):
     from pandas.plotting import scatter_matrix
@@ -69,8 +75,10 @@ def stats(file, toler_d_clean=0.01):
 def line_to_zero(x, a=0):
     return a * x
 
+
 def square(x, a=0):
     return a * x ** 2
+
 
 def fit_incident_vs_delta(file, toler_d_clean=0.01):
     from scipy.optimize import curve_fit
@@ -81,40 +89,49 @@ def fit_incident_vs_delta(file, toler_d_clean=0.01):
     results = read_csv(file)
     good_clean = np.abs(results['delta clean']) < toler_d_clean
     good_ratio = (results['channel_ratio'] > 0.8)&(results['channel_ratio'] < 1.2)
-    plt.figure(figsize=(13, 13  ))
+    fig = plt.figure(figsize=(8, 8))
+
     plt.title('rms error vs rate ratio correlation')
     gs = GridSpec(2, 2, width_ratios=[9.5, 0.5])
     ax0 = plt.subplot(gs[0, 0])
     ax1 = plt.subplot(gs[1, 0])
     ax2 = plt.subplot(gs[:, 1])
-    nsub = 8
-    frac_rmss = np.linspace(np.min(results['Frac_rms']),
+    nsub = 9
+    frac_rmss = np.linspace(0.05,
                             np.max(results['Frac_rms']), nsub)
     colors=iter(cm.magma(np.linspace(0,1,nsub)))
     coeffs = []
     for frac_rms_min, frac_rms_max in zip(frac_rmss[:-1], frac_rmss[1:]):
         good_rms = (results['Frac_rms'] >= frac_rms_min)&(results['Frac_rms'] < frac_rms_max)
         good = good_rms & good_ratio
-        x = results['incident_rate'][good] / (1 / (1 / results['incident_rate'][good] + 2.5e-3))
+        x = results['incident_rate'][good]
         y = results['CS'][good]
         color = next(colors)
         ax0.scatter(x, y, c=color)
-        par, pcov = curve_fit(line_to_zero, x, y)
-        x = np.linspace(0, max(x), 50)
-        ax0.plot(x, x * par[0], color=color)
-        coeffs.append(par[0])
-    ax0.set_xlabel('Incident / detected count rate ratio')
+        try:
+            par, pcov = curve_fit(line_to_zero, x, y)
+            x = np.linspace(0, max(x), 50)
+            ax0.plot(x, x * par[0], color=color)
+            coeffs.append(par[0])
+        except:
+            coeffs.append(np.nan)
+    coeffs = np.array(coeffs)
+    ax0.set_xlabel('Incident count rate')
     ax0.set_ylabel('rms relative error')
+    ax0.set_xlim([0, np.max(results['incident_rate'])])
 
     colors=cm.magma(np.linspace(0,1,nsub))
 
     frac_rmss = np.mean(list(zip(frac_rmss[:-1], frac_rmss[1:])), axis=1)
     ax1.scatter(frac_rmss, coeffs, c=colors)
-    par, pcov = curve_fit(square, frac_rmss, coeffs, p0=[0.0])
-    x = np.linspace(0, 0.4, 50)
+    good = coeffs == coeffs
+    par, pcov = curve_fit(square, frac_rmss[good], coeffs[good], p0=[0.0])
+    x = np.linspace(0, np.max(results['Frac_rms']), 50)
     ax1.plot(x, x**2 * par[0])
     ax1.set_xlabel('Frac. rms')
     ax1.set_ylabel('Slope of rms error vs rate ratio correlation')
+    ax1.set_xlim([0, np.max(results['Frac_rms'])])
+    ax1.set_ylim([np.min([np.min(coeffs), 0]), np.max(coeffs)])
     print(par[0])
     cmap = mpl.cm.magma
     norm = mpl.colors.Normalize(vmin=np.min(results['Frac_rms']),
@@ -122,20 +139,20 @@ def fit_incident_vs_delta(file, toler_d_clean=0.01):
 
     cb = mpl.colorbar.ColorbarBase(ax2, cmap=cmap, norm=norm)
     cb.set_label('Fractional rms')
-
+    return fig
 
 
 if __name__ == '__main__':
     import sys
     import time
     file = sys.argv[1]
-    toler_d_clean = 0.05
+    toler_d_clean = 0.01
     plt.ion()
     while True:
 #        plot_all(file, toler_d_clean=toler_d_clean)
         pairplot(file, toler_d_clean=toler_d_clean)
 #        stats(file, toler_d_clean=toler_d_clean)
 #        scatter_matrix(file, toler_d_clean=toler_d_clean)
-        fit_incident_vs_delta(file, toler_d_clean=0.01)
-        plt.pause(200)
+        fit_incident_vs_delta(file, toler_d_clean=toler_d_clean)
+        plt.pause(60)
         plt.close('all')
