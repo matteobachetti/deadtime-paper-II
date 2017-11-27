@@ -76,15 +76,17 @@ def fit_incident_vs_delta(file, toler_d_clean=0.01):
     from scipy.optimize import curve_fit
     from matplotlib.pyplot import cm
     from matplotlib.gridspec import GridSpec
+    import matplotlib as mpl
 
     results = read_csv(file)
     good_clean = np.abs(results['delta clean']) < toler_d_clean
     good_ratio = (results['channel_ratio'] > 0.8)&(results['channel_ratio'] < 1.2)
     plt.figure(figsize=(13, 13  ))
     plt.title('rms error vs rate ratio correlation')
-    gs = GridSpec(2, 1)
-    ax0 = plt.subplot(gs[0])
-    ax1 = plt.subplot(gs[1])
+    gs = GridSpec(2, 2, width_ratios=[9.5, 0.5])
+    ax0 = plt.subplot(gs[0, 0])
+    ax1 = plt.subplot(gs[1, 0])
+    ax2 = plt.subplot(gs[:, 1])
     nsub = 8
     frac_rmss = np.linspace(np.min(results['Frac_rms']),
                             np.max(results['Frac_rms']), nsub)
@@ -104,15 +106,22 @@ def fit_incident_vs_delta(file, toler_d_clean=0.01):
     ax0.set_xlabel('Incident / detected count rate ratio')
     ax0.set_ylabel('rms relative error')
 
+    colors=cm.magma(np.linspace(0,1,nsub))
 
     frac_rmss = np.mean(list(zip(frac_rmss[:-1], frac_rmss[1:])), axis=1)
-    ax1.scatter(frac_rmss, coeffs)
+    ax1.scatter(frac_rmss, coeffs, c=colors)
     par, pcov = curve_fit(square, frac_rmss, coeffs, p0=[0.0])
     x = np.linspace(0, 0.4, 50)
     ax1.plot(x, x**2 * par[0])
     ax1.set_xlabel('Frac. rms')
     ax1.set_ylabel('Slope of rms error vs rate ratio correlation')
     print(par[0])
+    cmap = mpl.cm.magma
+    norm = mpl.colors.Normalize(vmin=np.min(results['Frac_rms']),
+                                vmax=np.max(results['Frac_rms']))
+
+    cb = mpl.colorbar.ColorbarBase(ax2, cmap=cmap, norm=norm)
+    cb.set_label('Fractional rms')
 
 
 
