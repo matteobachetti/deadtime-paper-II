@@ -29,7 +29,7 @@ def _get_fourier_intv(lc, start_ind, end_ind):
 
 def FAD_power_spectra(lc1, lc2, segment_size, plot=False, smoothing_alg='gauss',
                       smoothing_length=None, verbose=False, tolerance=0.05,
-                      strict=False):
+                      strict=False, all_leahy=False):
     """Calculate Frequency Amplitude Difference-corrected (cross) power spectra.
 
     Parameters
@@ -105,6 +105,9 @@ def FAD_power_spectra(lc1, lc2, segment_size, plot=False, smoothing_alg='gauss',
         if plot:
             plt.scatter(freq, fourier_diff, s=1)
 
+        if all_leahy:
+            f1 = f1_leahy
+            f2 = f2_leahy
         p1 = (f1 * f1.conj()).real
         p1 = p1 / smooth_real * 2 
         p2 = (f2 * f2.conj()).real
