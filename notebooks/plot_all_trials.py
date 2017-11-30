@@ -37,16 +37,24 @@ def plot_all(file, toler_d_clean=0.01):
     plot_scatter_ratios(results, 'PDStot', toler_d_clean=toler_d_clean)
 
 
-def pairplot(file, toler_d_clean=0.5):
+def pairplot(file, toler_d_clean=0.5, filters={'channel_ratio': [0.8, 1.2]}):
     from seaborn import pairplot
     results = read_csv(file)
     good_clean = np.abs(results['delta clean']) < toler_d_clean
+    for key, val in filters.items():
+        good_clean = good_clean & (results[key] > val[0])&(results[key] < val[1])
     meanrate = results['incident_rate'] // 100 * 100 + 50
     results["rate"] = meanrate
+    vars_unfilt = ['channel_ratio', 'frequency', 'Frac_rms',
+            'CS', 'PDS 1', 'PDStot', 'slope', 'median', 'clean_median']
+    vars = []
+    for v in vars_unfilt:
+        if v in results:
+            vars.append(v)
+            
     g = pairplot(results[good_clean], hue="rate",
              plot_kws={"s": 5},
-                 vars=['channel_ratio', 'fad_delta',
-                       'CS', 'PDS 1', 'PDStot'], size=1.7,
+                 vars=vars, size=1.7,
              palette="GnBu_d")
     g.fig.subplots_adjust(right=0.9, left=0.1)
     return g.fig
@@ -173,34 +181,36 @@ def fit_incident_vs_delta(file, toler_d_clean=0.01,
 
 
 def fit_pds_quantities_vs_rms(file, toler_d_clean=0.01, 
-                         filters={'channel_ratio': [0.8, 1.2]}, quantity='slope', offset=1, fix=True):
+                         filters={'channel_ratio': [0.8, 1.2]}, quantity='slope', offset=1, fix=True,
+                         slope_fit_kind='square'):
     from scipy.optimize import curve_fit
     from matplotlib.pyplot import cm
     from matplotlib.gridspec import GridSpec
     import matplotlib as mpl
 
     results = read_csv(file)
-    good_clean = np.isclose(results['pds_m'], results['cs_m'], rtol=0.05)&\
-        (results['slope'] == results['slope'])
+    good_clean = (results['slope'] == results['slope'])&\
+        (np.abs(results['delta clean']) < toler_d_clean)
     for key, val in filters.items():
         good_clean = good_clean & (results[key] > val[0])&(results[key] < val[1])
  
     fig = plt.figure(figsize=(8, 8))
 
     plt.title('rms error vs rate ratio correlation')
-    gs = GridSpec(2, 2, width_ratios=[9.5, 0.5])
+    gs = GridSpec(3, 2, width_ratios=[9.5, 0.5])
     ax0 = plt.subplot(gs[0, 0])
     ax1 = plt.subplot(gs[1, 0])
+    ax3 = plt.subplot(gs[2, 0])
     ax2 = plt.subplot(gs[:, 1])
     nsub = 9
-    frac_rmss = np.linspace(np.min(results['rms'][good_clean]),
-                            np.max(results['rms']), nsub + 1)
+    frac_rmss = np.linspace(np.min(results['Frac_rms'][good_clean]),
+                            np.max(results['Frac_rms']), nsub + 1)
     colors=iter(cm.viridis(np.linspace(0,1,nsub)))
     ms = []
     qs = []
     for frac_rms_min, frac_rms_max in zip(frac_rmss[:-1], frac_rmss[1:]):
 
-        good_rms = (results['rms'] >= frac_rms_min)&(results['rms'] < frac_rms_max)
+        good_rms = (results['Frac_rms'] >= frac_rms_min)&(results['Frac_rms'] < frac_rms_max)
         good = good_rms & good_clean
 
         x = results['incident_rate'][good]
@@ -228,38 +238,43 @@ def fit_pds_quantities_vs_rms(file, toler_d_clean=0.01,
     ms = np.array(ms)
     qs = np.array(qs)
     
-#   ratio = results['pds_q'][good_clean]/results['pds_m'][good_clean]
-#     ax0.set_ylim([np.min(ratio), np.max(ratio)])
     ax0.set_xlabel('Incident rate')
     ax0.set_ylabel(quantity)
-#     ax0.set_xlim([0, np.max(results['incident_rate'])])
 
     colors=cm.viridis(np.linspace(0,1,nsub))
 
     frac_rmss = np.mean(list(zip(frac_rmss[:-1], frac_rmss[1:])), axis=1)
-#     ax1.scatter(results['incident_rate'][good_clean], 
-#                 ratio, 
-#                 c=results['rms'][good_clean], s=10, cmap='viridis')
     good = ms == ms
     ax1.scatter(frac_rmss[good], ms[good], c=colors[good], cmap='viridis')
     ax1.set_ylim([np.min(ms), np.max(ms)])
-#     slope, intercept, r_value, p_value, std_err = \
-#         linregress(frac_rmss[good], coeffs[good])
-    par, pcov = curve_fit(square, frac_rmss[good], ms[good], p0=[0.0])
+ 
+    x = np.linspace(0, np.max(results['Frac_rms']), 50)
 
-    x = np.linspace(0, np.max(results['rms']), 50)
-#     ax1.plot(x, x * slope + intercept)
-    ax1.plot(x, x**2 * par[0])
-    ax1.set_xlabel('rms')
+    if slope_fit_kind == 'square':
+        par, pcov = curve_fit(square, frac_rmss[good], ms[good], p0=[0.0])
+        ax1.plot(x, x**2 * par[0])
+    else:
+        par, pcov = curve_fit(line, frac_rmss[good], ms[good], p0=[0.0, 0.0])
+        ax1.plot(x, x * par[0] + par[1])
+        
+    ax1.set_xlabel('Frac_rms')
     ax1.set_ylabel('Slope of '+ quantity)
-#     ax1.set_xlim([0, np.max(results['rms'])])
-#     ax1.set_ylim([np.min([np.min(coeffs), 1]), np.max(coeffs)])
-#     ax1.set_ylim([np.min([np.min(coeffs), intercept]), np.max(coeffs)])
-#     print(slope,intercept)
+    
     print(par[0])
+    ax3.scatter(frac_rmss[good], qs[good], c=colors[good], cmap='viridis')
+    ax3.set_ylim([np.min(qs), np.max(qs)])
+    par, pcov = curve_fit(line, frac_rmss[good], qs[good])
+
+    x = np.linspace(0, np.max(results['Frac_rms']), 50)
+
+    ax3.plot(x, x * par[0] + par[1])
+    ax3.set_xlabel('Frac_rms')
+    ax3.set_ylabel('Intercept of '+ quantity)
+
+    print(par)
     cmap = mpl.cm.viridis
-    norm = mpl.colors.Normalize(vmin=np.min(results['rms']),
-                                vmax=np.max(results['rms']))
+    norm = mpl.colors.Normalize(vmin=np.min(results['Frac_rms']),
+                                vmax=np.max(results['Frac_rms']))
 
     cb = mpl.colorbar.ColorbarBase(ax2, cmap=cmap, norm=norm)
     cb.set_label('Fractional rms')
@@ -267,20 +282,35 @@ def fit_pds_quantities_vs_rms(file, toler_d_clean=0.01,
 if __name__ == '__main__':
     import sys
     import time
-    file = sys.argv[1]
+    infile = sys.argv[1]
+
     toler_d_clean = 0.01
     plt.ion()
+    post_filters = {'channel_ratio': [0.7, 1.5]} 
+    filters ={}# {'median': [0, 0.03]}
     while True:
+        table = read_csv(infile)
+        table['ratio'] = table['median'] / table['clean_median']
+        table.to_csv('bubu.csv')
+        file = 'bubu.csv'
+
 #        plot_all(file, toler_d_clean=toler_d_clean)
-#       pairplot(file, toler_d_clean=toler_d_clean)
-        pairplot_gain(file, toler_d_clean=toler_d_clean)
+        pairplot(file, toler_d_clean=toler_d_clean, filters=filters)
+#       pairplot_gain(file, toler_d_clean=toler_d_clean)
 #        stats(file, toler_d_clean=toler_d_clean)
 #        scatter_matrix(file, toler_d_clean=toler_d_clean)
 #       fit_incident_vs_delta(file, toler_d_clean=toler_d_clean)
+#        fit_pds_quantities_vs_rms(file, toler_d_clean=0.01, 
+#                             filters={**filters, **post_filters})
         fit_pds_quantities_vs_rms(file, toler_d_clean=0.01, 
-                             filters={'channel_ratio': [0.8, 1.2]})
+                             filters={**filters, **post_filters},
+                             quantity='median', offset=0, fix=False)
         fit_pds_quantities_vs_rms(file, toler_d_clean=0.01, 
-                             filters={'channel_ratio': [0.8, 1.2]},
-                             quantity='intercept', offset=0, fix=False)
-        plt.pause(60)
+                             filters={**filters, **post_filters},
+                             quantity='clean_median', offset=0, fix=False)
+        fit_pds_quantities_vs_rms(file, toler_d_clean=0.01, 
+                             filters={**filters, **post_filters},
+                             quantity='ratio', offset=1, fix=True,
+                             slope_fit_kind='linear')
+        plt.pause(600)
         plt.close('all')
