@@ -50,12 +50,13 @@ def pairplot(file, toler_d_clean=0.5, filters={'channel_ratio': [0.8, 1.2]}):
     vars = []
     for v in vars_unfilt:
         if v in results:
-            vars.append(v)
+            if np.max(results[v][good_clean]) > np.min(results[v][good_clean]):
+                vars.append(v)
             
     g = pairplot(results[good_clean], hue="rate",
-             plot_kws={"s": 5},
+                 plot_kws={"s": 5},
                  vars=vars, size=1.7,
-             palette="GnBu_d")
+                 palette="GnBu_d", dropna=True, diag_kind='kde')
     g.fig.subplots_adjust(right=0.9, left=0.1)
     return g.fig
 
