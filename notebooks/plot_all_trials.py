@@ -45,8 +45,9 @@ def pairplot(file, toler_d_clean=0.5, filters={'channel_ratio': [0.8, 1.2]}):
         good_clean = good_clean & (results[key] > val[0])&(results[key] < val[1])
     meanrate = results['incident_rate'] // 100 * 100 + 50
     results["rate"] = meanrate
+    results["median_ratio"] = results['median'] / results['clean_median']
     vars_unfilt = ['channel_ratio', 'frequency', 'Frac_rms',
-            'CS', 'PDS 1', 'PDStot', 'slope', 'median', 'clean_median']
+            'CS', 'PDS 1', 'PDStot', 'slope', 'median_ratio']
     vars = []
     for v in vars_unfilt:
         if v in results:
@@ -261,7 +262,7 @@ def fit_pds_quantities_vs_rms(file, toler_d_clean=0.01,
     ax1.set_xlabel('Frac_rms')
     ax1.set_ylabel('Slope of '+ quantity)
     
-    print(par[0])
+    retval = par[0]
     ax3.scatter(frac_rmss[good], qs[good], c=colors[good], cmap='viridis')
     ax3.set_ylim([np.min(qs), np.max(qs)])
     par, pcov = curve_fit(line, frac_rmss[good], qs[good])
@@ -272,46 +273,62 @@ def fit_pds_quantities_vs_rms(file, toler_d_clean=0.01,
     ax3.set_xlabel('Frac_rms')
     ax3.set_ylabel('Intercept of '+ quantity)
 
-    print(par)
     cmap = mpl.cm.viridis
     norm = mpl.colors.Normalize(vmin=np.min(results['Frac_rms']),
                                 vmax=np.max(results['Frac_rms']))
 
     cb = mpl.colorbar.ColorbarBase(ax2, cmap=cmap, norm=norm)
     cb.set_label('Fractional rms')
+    return retval
 
 if __name__ == '__main__':
     import sys
     import time
+    from hendrics.base import r_in, r_det
+    import warnings
+    warnings.filterwarnings('ignore')
     infile = sys.argv[1]
 
     toler_d_clean = 0.01
-    plt.ion()
-    post_filters = {'channel_ratio': [0.7, 1.5]} 
-    filters ={}# {'median': [0, 0.03]}
-    while True:
+#    plt.ion()
+    post_filters = {'channel_ratio': [0.7, 1.5]}
+    for f in np.logspace(1, np.log10(500), 5):
+        filters ={'frequency': [f, f + 30]}
         table = read_csv(infile)
         table['ratio'] = table['median'] / table['clean_median']
+        table['inc_to_det'] = table['incident_rate'] / r_det(2.5e-3, table['incident_rate'])
+        table['median_corr'] = table['median'] / table['inc_to_det']
+        table['ratio_corr'] = table['median_corr'] / table['clean_median']
         table.to_csv('bubu.csv')
         file = 'bubu.csv'
 
-#        plot_all(file, toler_d_clean=toler_d_clean)
-        pairplot(file, toler_d_clean=toler_d_clean, filters=filters)
-#       pairplot_gain(file, toler_d_clean=toler_d_clean)
-#        stats(file, toler_d_clean=toler_d_clean)
-#        scatter_matrix(file, toler_d_clean=toler_d_clean)
-#       fit_incident_vs_delta(file, toler_d_clean=toler_d_clean)
-#        fit_pds_quantities_vs_rms(file, toler_d_clean=0.01, 
-#                             filters={**filters, **post_filters})
-        fit_pds_quantities_vs_rms(file, toler_d_clean=0.01, 
-                             filters={**filters, **post_filters},
-                             quantity='median', offset=0, fix=False)
-        fit_pds_quantities_vs_rms(file, toler_d_clean=0.01, 
-                             filters={**filters, **post_filters},
-                             quantity='clean_median', offset=0, fix=False)
-        fit_pds_quantities_vs_rms(file, toler_d_clean=0.01, 
-                             filters={**filters, **post_filters},
-                             quantity='ratio', offset=1, fix=True,
-                             slope_fit_kind='linear')
-        plt.pause(600)
-        plt.close('all')
+    #        plot_all(file, toler_d_clean=toler_d_clean)
+#        pairplot(file, toler_d_clean=toler_d_clean, filters=filters)
+    #       pairplot_gain(file, toler_d_clean=toler_d_clean)
+    #        stats(file, toler_d_clean=toler_d_clean)
+    #        scatter_matrix(file, toler_d_clean=toler_d_clean)
+    #       fit_incident_vs_delta(file, toler_d_clean=toler_d_clean)
+        slope = fit_pds_quantities_vs_rms(file, toler_d_clean=0.01,
+                                          filters={**filters, **post_filters},
+                                          quantity='CS', offset=0)
+        print(f + 15, slope)
+    #        fit_pds_quantities_vs_rms(file, toler_d_clean=0.01,
+    #                             filters={**filters, **post_filters},
+    #                             quantity='median', offset=0, fix=False)
+    #        fit_pds_quantities_vs_rms(file, toler_d_clean=0.01,
+    #                             filters={**filters, **post_filters},
+    #                             quantity='clean_median', offset=0, fix=False)
+    #        fit_pds_quantities_vs_rms(file, toler_d_clean=0.01,
+    #                                  filters={**filters, **post_filters},
+    #                                  quantity='ratio', offset=1, fix=True,
+    #                                  slope_fit_kind='linear')
+    #        fit_pds_quantities_vs_rms(file, toler_d_clean=0.01,
+    #                                  filters={**filters, **post_filters},
+    #                                  quantity='inc_to_det', offset=1, fix=True,
+    #                                  slope_fit_kind='linear')
+    #        fit_pds_quantities_vs_rms(file, toler_d_clean=0.01,
+    #                                  filters={**filters, **post_filters},
+    #                                  quantity='ratio_corr', offset=1, fix=True,
+    #                                  slope_fit_kind='linear')
+
+        plt.show()
