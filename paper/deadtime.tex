@@ -279,7 +279,7 @@ For timing analysis, the effect of dead time is far more problematic.
 The periodogram, commonly referred to as power density spectrum (PDS)%
 \footnote{here we will use the term PDS for the actual source power spectrum, and \textit{periodogram} to indicate our estimate of it, or otherwise said, the realization of the ``real'' power spectrum we observe in the data}%
 , which is the most widely used statistical tool to investigate rapid variability, is heavily distorted by dead time, with a characteristic pattern similar to a damped oscillator.
-This pattern is stronger for brighter sources, and it is often not possible to disentangle this spectral distortion due to dead time and the broadband noise components characterizing the emission of accreting systems.
+This pattern is stronger for brighter sources, and it is often not possible to disentangle this power spectral distortion due to dead time and the broadband noise components characterizing the emission of accreting systems.
 In the special case where dead time is constant, its shape can be modeled precisely \citep{Zhang+95,Vikhlinin+94}.
 However, dead time is often different on an event-to-event basis, and it is not obvious how to model it precisely, also because the information on dead time is often incomplete in the data files distributed by HEASARC%
 \footnote{Whereas in principle this information could be obtained by using the PRIOR column in the unfiltered event files for some missions, the live time given in this column is affected by events that are not recorded in the file, like shield vetos in the case of \nustar, and the estimate of dead time is necessarily uncertain}%
@@ -337,7 +337,7 @@ Finally, the \texttt{hendrics.fake.filter\_for\_deadtime()} function was used to
 	\fig{imgs/wn_fourierdiff.eps}{0.33\textwidth}{(b)}
 	\fig{imgs/fourier_vs_diff_dt.eps}{0.33\textwidth}{(c)}}
           
-\caption{(a) and (b): Real Fourier amplitudes obtained by single light curves (top panels) and difference between two realizations of the same source light curve (bottom) in two cases: (a) Strong $1/f$ red noise and no dead time, calculated over many 500\,s segments of the light curve, and (b) no red noise and strong dead time, calculated over many 5\,s segments of the light curve. 
+\caption{(a) and (b): Real-valued Fourier amplitudes obtained by single light curves (top panels) and difference between two realizations of the same source light curve (bottom) in two cases: (a) Strong $1/f$ red noise and no dead time, calculated over many 500\,s segments of the light curve, and (b) no red noise and strong dead time, calculated over many 5\,s segments of the light curve. 
 The choice of different segment length reflects the range of frequencies we want to highlight in the two cases.
 The red curve gives the frequency-dependent spread of the distributions, measured by the mean of the absolute values of the curves in each frequency bin. 
 As expected, in the first case, the Fourier amplitude follows a power law curve, while the standard deviation of the difference is remarkably stable at all frequencies, as expected by the fact that the Poisson white noise is independent of frequency. 
@@ -347,7 +347,7 @@ In the second case, instead, dead time is frequency dependent and white noise is
 \label{fig:fourierdiff}
 \end{figure*}
 
-Let us consider two identical and independent detectors observing the same variable source, producing independent time series $\mathbf{x} = \{x_k\}_{k=1}^N$ and $\mathbf{y} = \{y_k\}_{k=1}^N$. For a stochastic process (e.g.\ $1/\nu$-type red noise), the Fourier amplitudes will vary as a function of $N_{\mathrm{phot}}P(\nu)/4$, where $P(\nu)$ is the shape of the power spectrum underlying the stochastic process, and $N_{\mathrm{phot}}$ denotes the number of photons in a light curve. If the two detectors observe the same source simultaneously, the amplitudes and phases of the stochastic process will be shared among $\mathbf{x}$ and $\mathbf{y}$, while each light curve will be affected \textit{independently} by both the photon counting noise in the detector, as well as the dead time process. The resulting Fourier amplitudes will be of the form
+Let us consider two identical and independent detectors observing the same variable source, producing independent and strictly simultaneous time series, with identical binning, $\mathbf{x} = \{x_k\}_{k=1}^N$ and $\mathbf{y} = \{y_k\}_{k=1}^N$. For a stochastic process (e.g.\ $1/\nu$-type red noise), the Fourier amplitudes will vary as a function of $N_{\mathrm{phot}}P(\nu)/4$, where $P(\nu)$ is the shape of the power spectrum underlying the stochastic process, and $N_{\mathrm{phot}}$ denotes the number of photons in a light curve. If the two detectors observe the same source simultaneously, the amplitudes and phases of the stochastic process will be shared among $\mathbf{x}$ and $\mathbf{y}$, while each light curve will be affected \textit{independently} by both the photon counting noise in the detector, as well as the dead time process. The resulting Fourier amplitudes will be of the form
 
 \begin{eqnarray}
 A_{xj} &=& A_{xsj} + A_{xdj} + A_{xnj} \nonumber \\
@@ -452,7 +452,7 @@ To test this, we produced a number of different synthetic datasets as explained 
 We first calculated the periodogram and cospectrum of the dead time-free data, averaged over 128-s intervals.
 Then, we applied a dead time filter to the event list and applied the FAD correction, as described in Section~\ref{sec:fad}
 
-All spectra were then expressed in fractional \rms \citep{BelloniHasinger90,Miyamoto+91} normalization, where the integral of the fitted spectral components over the frequency returns directly its fractional \rms.
+All spectra were then expressed in fractional \rms \citep{BelloniHasinger90,Miyamoto+91} normalization, where the integral of the fitted power spectral components over the frequency returns directly its fractional \rms.
 In the \rms normalization, the values of each point of the periodogram, after white noise subtraction, should be consistent between the dead time-free and the FAD-corrected periodograms.
 We fitted all spectra with the model which produced the simulated data and checked if the \rms values were consistent with the fit on the dead time-free periodogram.
 To calculate this \rms, we fitted the spectra with two Lorentzian components, and integrated the model over the full frequency range.
