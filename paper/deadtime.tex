@@ -346,30 +346,52 @@ The different behavior of Fourier amplitude differences under pure Poisson noise
 \label{fig:fourierdiff}
 \end{figure*}
 
-Let us consider two identical and independent detectors observing the same variable source, producing independent and strictly simultaneous time series, with identical binning, $\mathbf{x} = \{x_k\}_{k=1}^N$ and $\mathbf{y} = \{y_k\}_{k=1}^N$. For a stochastic process (e.g.\ $1/\nu$-type red noise), the Fourier amplitudes will vary as a function of $N_{\mathrm{phot}}P(\nu)/4$, where $P(\nu)$ is the shape of the power spectrum underlying the stochastic process, and $N_{\mathrm{phot}}$ denotes the number of photons in a light curve. If the two detectors observe the same source simultaneously, the amplitudes and phases of the stochastic process will be shared among $\mathbf{x}$ and $\mathbf{y}$, while each light curve will be affected \textit{independently} by both the photon counting noise in the detector, as well as the dead time process. The resulting Fourier amplitudes will be of the form
-
-\begin{eqnarray}
-A_{xj} &=& A_{xsj} + A_{xdj} + A_{xnj} \nonumber \\
-B_{xj} &=& B_{xsj} + B_{xdj} + B_{xnj} \, ,
-\end{eqnarray}
-
-\noindent where $A_{xsj}$ and $B_{xsj}$ denote the real and imaginary components of the signal power in the Fourier amplitudes,  $A_{xdj}$ and $B_{xdj}$ denote the variance introduced by dead time, and $A_{xnj}$ and $B_{xnj}$ similarly denote the white noise components in the Fourier amplitudes.
-For a large enough number of data points $N$, the Fourier amplitudes $A_{xj}$ and $B_{xj}$ will be composed of a sum of three independent random normal variables, with $A_{xsj} \sim \Normal(0, \sigma_{sj}^2)$,  $A_{xdj} \sim \Normal(0, \sigma_{dj}^2)$ and $A_{xnj} \sim \Normal(0, \sigma_n^2)$, where $\sigma_{sj}^2 = \sigma_{s}^2(\nu) = N_\mathrm{phot}P(\nu)/4$ is given by the (Leahy-normalized, \citealt{Leahy+83}) power spectrum of the underlying stochastic process, $P_j = P(\nu_j)$, $\sigma_{dj}^2$ is an unknown, frequency-dependent variance introduced by dead time, and $N_{\mathrm{phot}} = \sum_{k=1}^{N}{x_k}$ is the integrated flux in the light curve. We also have $\sigma_n^2 = N_\mathrm{phot}/2$, and hence the combined distributions become
-
-\begin{eqnarray}
-A_{xj} &\sim & \Normal(0, \sigma_{sj}^2 + \sigma_{dj}^2 + \sigma_{n}^2) \nonumber \\
-A_{yj} &\sim & \Normal(0, \sigma_{sj}^2 + \sigma_{dj}^2 + \sigma_{n}^2) \nonumber \, .
-\end{eqnarray}
-
-\noindent Similar expressions can be found for $A_{yj}$ and $B_{yj}$, respectively. It is important to note that $A_{xsj} = A_{ysj}$ and similarly $B_{xsj} = B_{ysj}$, that is, the amplitudes of the stationary noise process will be the same for the Fourier transforms of $\mathbf{x}$ and $\mathbf{y}$, while the components due to dead time and white noise differ between the two time series.
-
-As depicted in Figure~\ref{fig:fourierdiff}, the correlation between Fourier amplitudes implies that their difference will be independent of the source-induced variability $P(\nu_j)$ and will again be distributed following a normal distribution 
-
-\[
-A_{xj} - A_{yj} \sim \Normal(0, 2\sigma_{dj}^2 + 2\sigma_{n}^2) \; .
-\]
-
-\noindent The difference in Fourier amplitudes effectively separates the frequency-dependent effects of source variability and variability due to detector effects.
+Let us consider two identical and independent detectors observing the same variable source, producing independent and strictly simultaneous time series, with identical binning, $\mathbf{x} = \{x_k\}_{k=1}^N$ and $\mathbf{y} = \{y_k\}_{k=1}^N$. For a stochastic process (e.g.\ $1/\nu$-type red noise), the Fourier amplitudes will vary as a function of $N_{\mathrm{phot}}P(\nu)/4$, where $P(\nu)$ (Leahy-normalized, \citealt{Leahy+83}) is the shape of the power spectrum underlying the stochastic process, and $N_{\mathrm{phot}}$ denotes the number of photons in a light curve. If the two detectors observe the same source simultaneously, the amplitudes and phases of the stochastic process will be shared among $\mathbf{x}$ and $\mathbf{y}$, while each light curve will be affected \textit{independently} by both the photon counting noise in the detector, as well as the dead time process. 
+Dead time can be considered a convolution of the signal \citep{Vikhlinin+94}. As such, for the convolution theorem we will have that the Fourier transform $\mathcal{F}$ of dead time-affected light curves will result in a \textit{product} of the Fourier transform of the signal times the Fourier transform of the dead time filter:
+\begin{equation}
+\mathcal{F}(\nu) = \mathcal{S}(\nu)\cdot\mathcal{D}(\nu)
+\end{equation}
+where $\mathcal{S}$ denotes the signal and $\mathcal{D}$ dead time.
+For a large enough number of data points $N$, the complex Fourier amplitudes $S_j$ will be composed of a sum of two independent random normal variables: $S_j = S_{sj} + S_{nj}$, with $\Re S_{sj} \sim \Normal(0, \sigma_{sj}^2)$ and $\Re S_{nj} \sim \Normal(0, \sigma_n^2)$, and similarly for the imaginary parts, where $\sigma_{sj}^2 = \sigma_{s}^2(\nu) = N_\mathrm{phot}P(\nu)/4$ is given by the power spectrum of the underlying stochastic process and $N_{\mathrm{phot}} = \sum_{k=1}^{N}{x_k}$ is the integrated flux in the light curve. We also have $\sigma_n^2 = N_\mathrm{phot}/2$. 
+Moreover, the dead time filter will only depend on the mean count rate, which is the same in the two light curves.
+Thus, the difference between the Fourier amplitudes for the two time series $\mathbf{x}$ and $\mathbf{y}$ will be:
+\begin{equation}
+F_{xj} - F_{yj} = (S_{xj} - S_{yj})\cdot D_j = (S_{xsj} - S_{ysj} + S_{xnj} - S_{ynj})\cdot D_j
+\end{equation}
+It is important to note that $S_{xsj} = S_{ysj}$, that is, the amplitudes of the stationary noise process will be the same for the Fourier transforms of $\mathbf{x}$ and $\mathbf{y}$, while the components due to white noise differ between the two time series.
+Therefore, 
+\begin{equation}
+F_{xj} - F_{yj} = (S_{xnj} - S_{ynj})\cdot D_j
+\end{equation}
+So, in practice, the real and imaginary parts of the Fourier amplitude \textit{difference} between two simultaneous lightcurves of the same signal from identical detectors will be a random variate of the form $\Normal(0, 2\sigma_{n}^2)$ for both the imaginary and real parts, \textit{multiplied} by the Fourier transform of the dead time filter.
+But the squared norm of the latter \textit{is also what is distorting the periodograms}!
+However, whereas in the case of periodograms the source signal is mingled with the shape of $|\mathcal{D}|^2$, in this case we have a \textit{constant-scatter} random variable which is modulated by the same shape. Therefore, we can try to extract the shape of $|\mathcal{D}|^2$ from the Fourier amplitude differences from the two channels, and use it to correct the shape of the periodogram.
+%
+%
+%The resulting Fourier amplitudes will be of the form
+%
+%\begin{eqnarray}
+%A_{xj} &=& A_{xsj} + A_{xdj} + A_{xnj} \nonumber \\
+%B_{xj} &=& B_{xsj} + B_{xdj} + B_{xnj} \, ,
+%\end{eqnarray}
+%
+%\noindent where $A_{xsj}$ and $B_{xsj}$ denote the real and imaginary components of the signal power in the Fourier amplitudes,  $A_{xdj}$ and $B_{xdj}$ denote the variance introduced by dead time, and $A_{xnj}$ and $B_{xnj}$ similarly denote the white noise components in the Fourier amplitudes.
+%For a large enough number of data points $N$, the Fourier amplitudes $A_{xj}$ and $B_{xj}$ will be composed of a sum of three independent random normal variables, with $A_{xsj} \sim \Normal(0, \sigma_{sj}^2)$,  $A_{xdj} \sim \Normal(0, \sigma_{dj}^2)$ and $A_{xnj} \sim \Normal(0, \sigma_n^2)$, where $\sigma_{sj}^2 = \sigma_{s}^2(\nu) = N_\mathrm{phot}P(\nu)/4$ is given by the power spectrum of the underlying stochastic process, $P_j = P(\nu_j)$, $\sigma_{dj}^2$ is an unknown, frequency-dependent variance introduced by dead time, and $N_{\mathrm{phot}} = \sum_{k=1}^{N}{x_k}$ is the integrated flux in the light curve. We also have $\sigma_n^2 = N_\mathrm{phot}/2$, and hence the combined distributions become
+%
+%\begin{eqnarray}
+%A_{xj} &\sim & \Normal(0, \sigma_{sj}^2 + \sigma_{dj}^2 + \sigma_{n}^2) \nonumber \\
+%A_{yj} &\sim & \Normal(0, \sigma_{sj}^2 + \sigma_{dj}^2 + \sigma_{n}^2) \nonumber \, .
+%\end{eqnarray}
+%
+%\noindent Similar expressions can be found for $A_{yj}$ and $B_{yj}$, respectively. It is important to note that $A_{xsj} = A_{ysj}$ and similarly $B_{xsj} = B_{ysj}$, that is, the amplitudes of the stationary noise process will be the same for the Fourier transforms of $\mathbf{x}$ and $\mathbf{y}$, while the components due to dead time and white noise differ between the two time series.
+%
+%As depicted in Figure~\ref{fig:fourierdiff}, the correlation between Fourier amplitudes implies that their difference will be independent of the source-induced variability $P(\nu_j)$ and will again be distributed following a normal distribution 
+%
+%\[
+%A_{xj} - A_{yj} \sim \Normal(0, 2\sigma_{dj}^2 + 2\sigma_{n}^2) \; .
+%\]
+%
+%\noindent The difference in Fourier amplitudes effectively separates the frequency-dependent effects of source variability and variability due to detector effects.
 
 %%%%%%%%%%%%%%%%%%%%%%%% SECTION 4 %%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -394,8 +416,7 @@ After correction, the powers follow remarkably well the expected Laplace and $\c
 Let us simulate two constant light curves with an incident mean count rate of 400 counts/sec and a dead time of 2.5 ms, as we would expect from two identical detectors observing the same stable X-ray source (Figure ~\ref{fig:fourierdiff}, middle panel).
 The Fourier amplitudes $A_{xj}$ and $A_{yj}$ of the light curves from the two detectors are heavily distorted by dead time, with the characteristic damped oscillator-like shape \citep{Vikhlinin+94,Zhang+95}. 
 As laid out in Section \ref{sec:fourierdiff}, the difference of Fourier amplitudes from two independent but identical detectors shows no source variability, but \textit{still shows the same distortion} due to dead time.
-This gives a clear way to disentangle between source- and dead time-driven variability.
-By using the difference between the Fourier amplitudes in two detectors, we can in principle renormalize the power spectrum so that only the source variability alters its otherwise flat shape.
+Therefore, using the difference between the Fourier amplitudes in two detectors, we can in principle renormalize the power spectrum so that only the source variability alters its otherwise flat shape.
 
 As shown in Figure~\ref{fig:fourierdiff} (right panel), the single-channel Fourier amplitudes are proportional to the difference of the Fourier amplitudes in different realizations, with a constant factor $1/\sqrt{2}$.
 Therefore, we expect that the periodogram will be proportional to the square of the Fourier amplitude difference, divided by 2.
