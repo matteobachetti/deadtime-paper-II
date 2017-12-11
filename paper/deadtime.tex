@@ -301,36 +301,7 @@ In \sref{sec:fourierdiff} we show that, in the absence of dead time, the Fourier
 In \sref{sec:wndeadtime} we show that, in the presence of dead time, the difference of the Fourier amplitude still eliminates the source signal but retains information on dead time effects.
 In \sref{sec:correction} we show that this can be used to recover the dead noise-free power spectrum.
 
-%%%%%%%%%%%%%%%%%%%%%%%% SECTION 2 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\section{Data simulation} \label{sec:data}
-All simulated and real data sets in this paper were produced and/or analyzed with a combination of the two Python libraries \texttt{stingray}%
-\footnote{The library is under heavy development.
-    For this work we used the version identified by the hash \texttt{3e64f3d}}
-\citep{huppenkothen2016} and \texttt{HENDRICS} v.\texttt{3.0b2} \citep[formerly known as MaLTPyNT;][]{2015ascl.soft02021B}, both based on Astropy \citep{astropy2013}.
-
-We used the same procedure and algorithms described by \citet{Bachetti+15}, Section 4, that we briefly recall here together with references to the methods and classes of the libraries above where these steps are implemented.
-%The classes in the \texttt{stingray.simulate} module were used to simulate light curves with a given noise profile. 
-We used the \citet{timmer1995} method to create a noise-affected light curve starting from a given power spectral shape. 
-This method is implemented in the \texttt{stingray.simulate} module.
-%We first created the noisy light curves and then used an acceptance-rejection method to obtain simulated events. 
-This step needs to be done carefully: if the initial light curves contain significant random noise, the process for the creation of events creates a random variate on the top of the local count rate - which is varying randomly already - producing a non-Poissonian final light curve. 
-So, we initially simulated light curves with a very high ``count rate'' - so that the Poisson noise was relatively small - then renormalized the light curves to the wanted (lower) count rate and \rms and finally used these light curves to simulate event lists using the rejection sampling, implemented in the \texttt{stingray.Eventlist.simulate\_times()} method.
-Finally, the \texttt{hendrics.fake.filter\_for\_deadtime()} function was used to apply a non-paralyzable dead time of 2.5\,ms to the simulated event lists. For more details on the simulated data sets, see also Section \ref{sec:correction} and the available Jupyter notebooks%
-\footnote{\href{https://github.com/matteobachetti/deadtime-paper-II}{https://github.com/matteobachetti/deadtime-paper-II}} \citep[for a description of Jupyter notebooks, see][]{kluyver2016jupyter}.
-
-%\subsection{Cyg X-1 \nustar dataset}
-%We tested the method also on real data of several bright sources observed by \nustar.
-%As an example, we report here one such test done on \nustar data of the black hole binary Cyg~X-1 together with the steps to reproduce our analysis, using the linked Jupyter notebook if needed.
-%We downloaded the observation directory of \nustar ObsID 30001011009 (UT 2014-10-04) from the HEASARC using the custom \texttt{heasarc\_pipelines} package (Bachetti et al., ASCL identifier requested). 
-%Equivalently, this download can be done using the online tools provided by HEASARC (e.g. \texttt{xamin}).
-%Starting from the standard cleaned science event files distributed by HEASARC, we applied a barycenter correction using the FTOOL \texttt{barycorr} shipped with HEASOFT 6.21 with the clock correction file n. 71 from the \nustar CALDB.
-%We selected photons in a region of 50\arcsec around the nominal position of Cyg X-1 using the FTOOL \texttt{fselect}.%
-%\footnote{To use the method on different sources, it is sufficient to download a different ObsID and change the region file containing the position of the source}.
-%We used the scripts contained in \texttt{HENDRICS} to load the event lists for the two detectors FPMA and FPMB, calibrate them to translate the PI channels into energy values, and produced light curves with photons from 3 to 79 keV and binned with uniform time bins of 1/4096$\sim2.44\cdot10^{-4}$\,sec%
-%\footnote{This procedure uses the scripts \texttt{HENreadfile}, \texttt{HENcalibrate} and \texttt{HENlcurve}, as described at\\ \href{http://hendrics.readthedocs.io/en/master/tutorials/quicklook.html}{http://hendrics.readthedocs.io/en/master/tutorials/quicklook.html}}.
-
-%%%%%%%%%%%%%%%%%%%%%%%% SECTION 3 %%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%% SECTION 2 %%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{On the difference of Fourier amplitudes} \label{sec:fourierdiff}
 \begin{figure*}
@@ -391,9 +362,43 @@ However, in the case of periodograms the source signal is mingled with the shape
 %
 %\noindent The difference in Fourier amplitudes effectively separates the frequency-dependent effects of source variability and variability due to detector effects.
 
+%%%%%%%%%%%%%%%%%%%%%%%% SECTION 3 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{The FAD method} \label{sec:fad}
+\subsection{Data simulation} \label{sec:data}
+All simulated and real data sets in this paper were produced and/or analyzed with a combination of the two Python libraries \texttt{stingray}%
+\footnote{The library is under heavy development.
+    For this work we used the version identified by the hash \texttt{3e64f3d}.
+    See \href{https://github.com/StingraySoftware/notebooks/}{https://github.com/StingraySoftware/notebooks/} for tutorials on simulations, light curve production and timing analysis with Stingray}
+\citep{huppenkothen2016} and \texttt{HENDRICS} v.\texttt{3.0b2} \citep[formerly known as MaLTPyNT;][]{2015ascl.soft02021B}, both based on Astropy \citep{astropy2013}.
+
+We used the same procedure and algorithms described by \citet{Bachetti+15}, Section 4, that we briefly recall here together with references to the methods and classes of the libraries above where these steps are implemented.
+%The classes in the \texttt{stingray.simulate} module were used to simulate light curves with a given noise profile. 
+We used the \citet{timmer1995} method to create a noise-affected light curve starting from a given power spectral shape. 
+This method is implemented in the \texttt{stingray.simulate} module.
+%We first created the noisy light curves and then used an acceptance-rejection method to obtain simulated events. 
+This step needs to be done carefully: if the initial light curves contain significant random noise, the process for the creation of events creates a random variate on the top of the local count rate - which is varying randomly already - producing a non-Poissonian final light curve. 
+So, we initially simulated light curves with a very high ``count rate'' - so that the Poisson noise was relatively small - then renormalized the light curves to the wanted (lower) count rate and \rms and finally used these light curves to simulate event lists using the rejection sampling, implemented in the \texttt{stingray.Eventlist.simulate\_times()} method.
+Then, the \texttt{hendrics.fake.filter\_for\_deadtime()} function was used to apply a non-paralyzable dead time of 2.5\,ms to the simulated event lists. For more details on the simulated data sets, see also Section \ref{sec:correction} and the available Jupyter notebooks%
+\footnote{\href{https://github.com/matteobachetti/deadtime-paper-II}{https://github.com/matteobachetti/deadtime-paper-II}} \citep[for a description of Jupyter notebooks, see][]{kluyver2016jupyter}.
+After producing these synthetic event lists, we started the standard timing analysis: we produced light curves with a bin time of $\sim0.122$\,ms, and calculated power spectral products (cospectrum, periodogram) over segments of these light curves using \texttt{stingray}.
+
+
+%\subsection{Cyg X-1 \nustar dataset}
+%We tested the method also on real data of several bright sources observed by \nustar.
+%As an example, we report here one such test done on \nustar data of the black hole binary Cyg~X-1 together with the steps to reproduce our analysis, using the linked Jupyter notebook if needed.
+%We downloaded the observation directory of \nustar ObsID 30001011009 (UT 2014-10-04) from the HEASARC using the custom \texttt{heasarc\_pipelines} package (Bachetti et al., ASCL identifier requested). 
+%Equivalently, this download can be done using the online tools provided by HEASARC (e.g. \texttt{xamin}).
+%Starting from the standard cleaned science event files distributed by HEASARC, we applied a barycenter correction using the FTOOL \texttt{barycorr} shipped with HEASOFT 6.21 with the clock correction file n. 71 from the \nustar CALDB.
+%We selected photons in a region of 50\arcsec around the nominal position of Cyg X-1 using the FTOOL \texttt{fselect}.%
+%\footnote{To use the method on different sources, it is sufficient to download a different ObsID and change the region file containing the position of the source}.
+%We used the scripts contained in \texttt{HENDRICS} to load the event lists for the two detectors FPMA and FPMB, calibrate them to translate the PI channels into energy values, and produced light curves with photons from 3 to 79 keV and binned with uniform time bins of 1/4096$\sim2.44\cdot10^{-4}$\,sec%
+%\footnote{This procedure uses the scripts \texttt{HENreadfile}, \texttt{HENcalibrate} and \texttt{HENlcurve}, as described at\\ \href{http://hendrics.readthedocs.io/en/master/tutorials/quicklook.html}{http://hendrics.readthedocs.io/en/master/tutorials/quicklook.html}}.
+
+
 %%%%%%%%%%%%%%%%%%%%%%%% SECTION 4 %%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Dead time-affected white noise} \label{sec:wndeadtime}
+\subsection{First test: white noise} \label{sec:wndeadtime}
 
 \begin{figure*}
 \plotone{imgs/before_and_after.eps}
@@ -411,8 +416,8 @@ After correction, the powers follow remarkably well the expected Laplace and $\c
 \label{fig:dist}
 \end{figure*}
 
-Let us simulate two constant light curves with an incident mean count rate of 400 counts/sec and a dead time of 2.5 ms, as we would expect from two identical detectors observing the same stable X-ray source (Figure ~\ref{fig:fourierdiff}, middle panel).
-The Fourier amplitudes of the light curves from the two detectors are heavily distorted by dead time, with the characteristic damped oscillator-like shape \citep{Vikhlinin+94,Zhang+95}. 
+Let us simulate two constant light curves with an incident mean count rate of 400 counts/sec and a dead time of 2.5 ms, as we would expect from two identical detectors observing the same stable X-ray source.
+The Fourier amplitudes of the light curves from the two detectors are heavily distorted by dead time, with the characteristic damped oscillator-like shape \citep{Vikhlinin+94,Zhang+95}  (Figure ~\ref{fig:fourierdiff}, middle panel). 
 As laid out in Section \ref{sec:fourierdiff}, the difference of Fourier amplitudes from two independent but identical detectors shows no source variability, but \textit{still shows the same distortion} due to dead time.
 Therefore, using the difference between the Fourier amplitudes in two detectors, we can in principle renormalize the power spectrum so that only the source variability alters its otherwise flat shape.
 
@@ -425,13 +430,13 @@ We call this procedure the \textbf{Fourier Amplitude Difference} (hereafter FAD)
 
 The correction is depicted in Figure~\ref{fig:comparison}. 
 Starting from a heavily distorted distribution of the powers, applying the FAD correction ``flattens'' remarkably well the white noise level of the periodogram and the distribution of the scatter of the white noise periodogram and cospectrum. 
-Also, it reinstates a remarkably correct distribution of powers, following the expected $\chi^2_2$ distribution \citep{Lewin+88} very closely. 
+Also, it reinstates a correct distribution of powers, following the expected $\chi^2_2$ distribution \citep{Lewin+88} very closely. 
 Analogously, the corrected cospectrum will follow the expected Laplace distribution \citep{Huppenkothen & Bachetti, sub.}.
 While the original dead time-affected cospectrum had a frequency-dependent modification to the \rms level, the FAD-corrected cospectrum gets back to a frequency-independent shape, like in the dead time-free case.
 
 %%%%%%%%%%%%%%%%%%%%%%%% SECTION 5 %%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{The FAD correction algorithm} \label{sec:fad}
+\subsection{The FAD algorithm in detail} \label{sec:fad}
 In practice, the FAD correction algorithm in a generic case would work as follows:
 \begin{enumerate}
 \item split the two light curves in segments as one would do to calculate standard averaged periodograms;
@@ -450,7 +455,7 @@ In practice, the FAD correction algorithm in a generic case would work as follow
 \end{enumerate}
 
 %%%%%%%%%%%%%%%%%%%%%%%% SECTION 6 %%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Testing the FAD correction on simulated data} \label{sec:correction}
+\subsection{FAD correction of generic variable periodograms} \label{sec:correction}
 
 \begin{figure*}
     \plotone{imgs/four_qpos.eps}
@@ -476,9 +481,10 @@ To calculate this \rms, we fitted the spectra with two Lorentzian components, an
 For periodograms, the model included also a constant offset to account for the white noise level.
 An example of this analysis is shown in Figure~\ref{fig:pds}.
 
-\section{Caveats}\label{sec:caveat}
+
+\subsection{Simulation results and discussion}\label{sec:caveat}
 \begin{figure*}
-    \plotone{imgs/errors.png}
+    \plotone{imgs/errors.pdf}
     \caption{Relative overestimation of FAD with respect to \rms, versus \rms, as calculated from the cospectrum.  
     We encoded the frequency of the feature in the color, and the incident rate in the size of the scatter points.
     From this visualization we see two regimes: below $\sim$40\% fractional \rms, the errors are dominated by statistical errors. 
@@ -487,20 +493,21 @@ An example of this analysis is shown in Figure~\ref{fig:pds}.
     clearly truer when the incident rate \textit{and} the \rms are high.}
     \label{fig:errors}
 \end{figure*}
-The simulations show that the shape of the periodogram is precisely corrected by the FAD procedure \textit{if the input light curves have the same count rate} and \textit{for values of the input count rate and \rms that are not too extreme}. 
-The first caveat turns out to be an issue only for the single-channel periodogram. 
+
+The simulations show that the shape of the periodogram is precisely corrected by the FAD procedure if (1) \textit{the input light curves have the same count rate} and (2) \textit{for values of the input count rate and \rms that are not too extreme}. 
+The first caveat turns out, in practice, to be only a big issue for the single-channel periodogram, but \textit{not} for cospectra and total-intensity periodograms. 
 At high count rates, single-channel periodograms are corrected very well only if the two channels have very similar count rates, with the requirement being unsurprisingly stricter and stricter as the count rate increases.
-However, we find that the total-intensity periodogram and the cospectrum remains well corrected by the FAD even if the count rate in the two channels differs by 30\%, for any reasonable count rate.
+However, we find that the total-intensity periodogram and the cospectrum remains well corrected by the FAD even if the count rate in the two channels differs by 30\% in most cases.
 Therefore, we recommend to use the FAD very carefully with single-channel periodograms, which should not be an issue given that the total-intensity periodogram is more sensitive and more convenient to use anyway. 
-A comparison with the cospectrum, that is not affected by white noise distortions, is always recommended. 
+A comparison with the cospectrum, that is not affected by white noise level distortions, is always recommended. 
 
 The second caveat needs some attention. 
 We find that the FAD correction consistently overestimates the integrated \rms when the count rate and \rms are \textit{both} very high, \textit{in particular at low frequency} (See Figure~\ref{fig:errors}).
-At standard count rates and fractional \rms for bright black hole binaries, $\sim$200 ct/s and 30\% \rms for the \nustar case, the relative error is below 5\% (meaning that if the \rms is 30\%, the measured \rms is between 30 and 32\%!) and it is symmetrically distributed around 0, as expected from statistical error. 
+At $\sim$200 ct/s and 30\% \rms, the relative error is below 5\% (meaning that if the \rms is 30\%, the measured \rms is between 30 and 32\%!) and it is symmetrically distributed around 0, as expected from statistical errors. 
 At higher incident rates and \rms, the error distribution skews towards positive relative errors, implying an overestimation of the \rms.
 This should not be a problem in most cases, where the \rms is used as a rough indicator for spectral state.
-If very precise measurements of \rms are needed (for example, to calculate \rms/energy spectra), it is somewhat safer to account for this through simulations, without having to make further risky frequency-dependent corrections to the \rms.
-As a rough estimate, the relative error on the fractional \rms increases \textit{linearly} with the count rate and \textit{quadratically} with real \rms.
+If very precise measurements of \rms are needed (for example, to calculate \rms/energy spectra), it is safer to account for this through simulations.
+As a rough rule-of-thumb, the relative error on the fractional \rms increases \textit{linearly} with the count rate and \textit{quadratically} with \rms.
 A practical way to estimate this effect during analysis is to apply the FAD, obtain a best fit model, calculate the \rms, then use the codes we shared with the Jupyter notebooks to simulate a number of realizations of the light curve, evaluating what is the amount of overestimation involved.
 
 %%%%%%%%%%%%%%%%%%%%%%%% SECTION 6 %%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -537,15 +544,15 @@ This method is valid in principle for
 In general, we recommend applying the FAD correction to both the periodogram and the cospectrum. 
 The periodogram, if obtained by the sum of the light curves, can yield a higher signal-to-noise ratio.
 However, the white noise level subtraction is not always very precise due to mismatches in the mean count rate in the two light curves. 
-A comparison with the FAD-corrected cospectrum, to verify visually the white noise subtraction, is always recommended.
-It is important to be reasonably sure of the white noise level of the periodogram, as the white noise subtraction is the most important step when calculating the significance of a given feature in the periodogram \citep[e.g.][]{Barret+12,Huppenkothen+17}.
-The cospectrum has the advantage of not requiring white noise level subtraction.
+A comparison with the FAD-corrected cospectrum, to verify visually the white noise subtraction, is always recommended: the white noise subtraction is the most important step when calculating the significance of a given feature in the periodogram \citep[e.g.][]{Barret+12,Huppenkothen+17}.
+The cospectrum has indeed the advantage of not requiring white noise level subtraction.
 
-In all cases, we find that the adjustment of the white noise standard deviation in the periodogram and the cospectrum works remarkably well, allowing to make a confident analysis of X-ray variability even in sources where this was precluded until now.
-The only 
-This software will be merged into the main repository of \texttt{stingray} before publication.
-A number of jupyter notebooks will also be posted at the address \href{https://github.com/matteobachetti/deadtime-paper-II}{https://github.com/matteobachetti/deadtime-paper-II} to reproduce the full analysis plotted in the Figures of this paper, plus more examples of application of these techniques to simulated and real data.
+A number of jupyter notebooks is available the address \href{https://github.com/matteobachetti/deadtime-paper-II}{https://github.com/matteobachetti/deadtime-paper-II} to reproduce the full analysis plotted in the Figures of this paper, plus more examples of application of these techniques to simulated and real data.
 The full algorithm described in Section~\ref{sec:fad} is contained in the \texttt{fad\_correction.py} file in the notebooks directory, for reference.
+In all cases, we find that the adjustment of the white noise standard deviation in the periodogram and the cospectrum works remarkably well, allowing to make a confident analysis of X-ray variability even in sources where this was precluded until now.
+Only in cases where the count rate and the \rms are \textit{both} very high (>1000 ct/s incident, >40\% resp.), the FAD correction leads to an overestimation the \rms, even if the white noise level of the periodogram remains flat.
+In these case, we provide some example simulation code to estimate this effect in the notebooks.
+This software will be merged into the main repository of \texttt{stingray} before publication.
 
 
 \acknowledgments
