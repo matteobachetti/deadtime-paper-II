@@ -99,9 +99,6 @@ def FAD_power_spectra(lc1, lc2, segment_size, plot=False, smoothing_alg='gauss',
         elif smoothing_alg == 'spline':
             spl = UnivariateSpline(freq, fourier_diff.real**2, s=1)
             smooth_real = spl(freq.astype(np.float64))
-        elif smoothing_alg == 'savgol':
-            spl = UnivariateSpline(freq, fourier_diff.real**2, s=1)
-            smooth_real = spl(freq.astype(np.float64))
         if plot:
             plt.scatter(freq, fourier_diff, s=1)
 
