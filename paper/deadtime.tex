@@ -305,9 +305,9 @@ In \sref{sec:correction} we show that this can be used to recover the dead noise
 
 \section{On the difference of Fourier amplitudes} \label{sec:fourierdiff}
 \begin{figure*}
-\gridline{\fig{imgs/rn_fourierdiff.eps}{0.33\textwidth}{(a)}
-	\fig{imgs/wn_fourierdiff.eps}{0.33\textwidth}{(b)}
-	\fig{imgs/fourier_vs_diff_dt.eps}{0.33\textwidth}{(c)}}
+\gridline{\fig{rn_fourierdiff.eps}{0.33\textwidth}{(a)}
+	\fig{wn_fourierdiff.eps}{0.33\textwidth}{(b)}
+	\fig{fourier_vs_diff_dt.eps}{0.33\textwidth}{(c)}}
           
 \caption{(a) and (b): Real-valued Fourier amplitudes obtained by single light curves (top panels) and difference between two realizations of the same source light curve (bottom) in two cases: (a) Strong $1/f$ red noise and no dead time, calculated over many 500\,s segments of the light curve, and (b) no red noise and strong dead time, calculated over many 5\,s segments of the light curve. 
 The red curve gives the frequency-dependent spread of the distributions, measured by the mean of the absolute values of the curves in each frequency bin. 
@@ -401,8 +401,8 @@ After producing these synthetic event lists, we started the standard timing anal
 \subsection{First test: white noise} \label{sec:wndeadtime}
 
 \begin{figure*}
-\plotone{imgs/before_and_after.eps}
-%\plotone{imgs/pds_pdf.pdf}
+\plotone{before_and_after.eps}
+%\plotone{pds_pdf.pdf}
 \caption{Periodogram and cospectrum, before and after FAD correction, for a pure white noise light curve. 
 The deadtime-driven distortion of the white noise level in the periodogram, and the frequency-dependent modulation of the \rms in both spectra, disappear after applying the FAD correction. 
 Spectra were calculated over 2-sec intervals and averaged, to decrease the scatter and highlight the distortion of powers.}
@@ -410,7 +410,7 @@ Spectra were calculated over 2-sec intervals and averaged, to decrease the scatt
 \end{figure*}
 
 \begin{figure*}
-\plotone{imgs/pds_pdf.pdf}
+\plotone{pds_pdf.pdf}
 \caption{PDF of non-averaged powers in the cospectrum (red) and the periodogram (black), before the FAD correction and after, shown as a histogram. 
 After correction, the powers follow remarkably well the expected Laplace and $\chi^2_2$ distributions respectively, as highlighted by the overplotted probability density functions (PDF).}
 \label{fig:dist}
@@ -458,7 +458,7 @@ In practice, the FAD correction algorithm in a generic case would work as follow
 \subsection{FAD correction of generic variable periodograms} \label{sec:correction}
 
 \begin{figure*}
-    \plotone{imgs/four_qpos.eps}
+    \plotone{four_qpos.eps}
     \caption{Periodograms and cospectra from a simulation with four Lorentzian features (at 50, 200, 300 and 400 Hz) with 40-Hz full with at half maximum (FWHM). 
     We plotted and fitted periodograms and cospectra before and after applying the dead time filter
     The total \rms before dead time was 40\% and the incident photon flux 400 ct/s. 
@@ -484,7 +484,7 @@ An example of this analysis is shown in Figure~\ref{fig:pds}.
 
 \subsection{Simulation results and discussion}\label{sec:caveat}
 \begin{figure*}
-    \plotone{imgs/errors.pdf}
+    \plotone{errors.pdf}
     \caption{Relative overestimation of FAD with respect to \rms, versus \rms, as calculated from the cospectrum.  
     We encoded the frequency of the feature in the color, and the incident rate in the size of the scatter points.
     From this visualization we see two regimes: below $\sim$40\% fractional \rms, the errors are dominated by statistical errors. 
