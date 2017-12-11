@@ -306,15 +306,16 @@ In \sref{sec:correction} we show that this can be used to recover the dead noise
 \section{Data simulation} \label{sec:data}
 All simulated and real data sets in this paper were produced and/or analyzed with a combination of the two Python libraries \texttt{stingray}%
 \footnote{The library is under heavy development.
-    For this work we used the version identified by the hash \texttt{XXXXXX}}
-\citep{huppenkothen2016} and \texttt{HENDRICS} v.\texttt{3.0b1} \citep[formerly known as MaLTPyNT;][]{2015ascl.soft02021B}, both based on Astropy \citep{astropy2013}.
+    For this work we used the version identified by the hash \texttt{3e64f3d}}
+\citep{huppenkothen2016} and \texttt{HENDRICS} v.\texttt{3.0b2} \citep[formerly known as MaLTPyNT;][]{2015ascl.soft02021B}, both based on Astropy \citep{astropy2013}.
 
-We used the same procedure and algorithms described by \citet{Bachetti+15}, Section 4, that we briefly summarize here together with references to the methods and classes of the libraries above where these steps are implemented.
-The classes in \texttt{stingray.simulate} were used to simulate light curves with a given noise profile. 
-These classes use the \citet{timmer1995} method to create a noise-affected light curve starting from a given power spectral shape.
-We first created the noisy light curves and then used an acceptance-rejection method to obtain simulated events from these light curves (\texttt{stingray.Eventlist.simulate\_times()}). 
-This step needs to be done carefully: if the initial light curves are done directly with the wanted count rate, they contain significant random noise, and the process for the creation of events amplifies this noise (because it further creates a random variate on the top of the local count rate, which is varying randomly already) producing a non-Poissonian final light curve. 
-Therefore, we initially used the \citet{timmer1995} method to get light curves with a very high count rate - so that the Poisson noise is relatively small - then renormalized the light curves to the wanted (lower) count rate and \rms and finally used these light curves to simulate event lists.
+We used the same procedure and algorithms described by \citet{Bachetti+15}, Section 4, that we briefly recall here together with references to the methods and classes of the libraries above where these steps are implemented.
+%The classes in the \texttt{stingray.simulate} module were used to simulate light curves with a given noise profile. 
+We used the \citet{timmer1995} method to create a noise-affected light curve starting from a given power spectral shape. 
+This method is implemented in the \texttt{stingray.simulate} module.
+%We first created the noisy light curves and then used an acceptance-rejection method to obtain simulated events. 
+This step needs to be done carefully: if the initial light curves contain significant random noise, the process for the creation of events creates a random variate on the top of the local count rate - which is varying randomly already - producing a non-Poissonian final light curve. 
+So, we initially simulated light curves with a very high ``count rate'' - so that the Poisson noise was relatively small - then renormalized the light curves to the wanted (lower) count rate and \rms and finally used these light curves to simulate event lists using the rejection sampling, implemented in the \texttt{stingray.Eventlist.simulate\_times()} method.
 Finally, the \texttt{hendrics.fake.filter\_for\_deadtime()} function was used to apply a non-paralyzable dead time of 2.5\,ms to the simulated event lists. For more details on the simulated data sets, see also Section \ref{sec:correction} and the available Jupyter notebooks%
 \footnote{\href{https://github.com/matteobachetti/deadtime-paper-II}{https://github.com/matteobachetti/deadtime-paper-II}} \citep[for a description of Jupyter notebooks, see][]{kluyver2016jupyter}.
 
@@ -338,10 +339,8 @@ Finally, the \texttt{hendrics.fake.filter\_for\_deadtime()} function was used to
 	\fig{imgs/fourier_vs_diff_dt.eps}{0.33\textwidth}{(c)}}
           
 \caption{(a) and (b): Real-valued Fourier amplitudes obtained by single light curves (top panels) and difference between two realizations of the same source light curve (bottom) in two cases: (a) Strong $1/f$ red noise and no dead time, calculated over many 500\,s segments of the light curve, and (b) no red noise and strong dead time, calculated over many 5\,s segments of the light curve. 
-The choice of different segment length reflects the range of frequencies we want to highlight in the two cases.
 The red curve gives the frequency-dependent spread of the distributions, measured by the mean of the absolute values of the curves in each frequency bin. 
-As expected, in the first case, the Fourier amplitude follows a power law curve, while the standard deviation of the difference is remarkably stable at all frequencies, as expected by the fact that the Poisson white noise is independent of frequency. 
-In the second case, instead, dead time is frequency dependent and white noise is also affected, so that the difference of Fourier amplitudes is modulated as well.
+The different behavior of Fourier amplitude differences under pure Poisson noise and dead time noise is evident, by comparing (a) and (b).
 (c) Scatter distribution of the absolute values of dead time-affected Fourier amplitudes versus the difference of Fourier amplitudes for case (b): their relation is clearly linear, with a factor $1/\sqrt{2}$. 
 }
 \label{fig:fourierdiff}
@@ -392,14 +391,13 @@ After correction, the powers follow remarkably well the expected Laplace and $\c
 \label{fig:dist}
 \end{figure*}
 
-Let us simulate two constant light curves with an incident mean count rate of 400 counts/sec [CHECK] and a dead time of 2.5 ms, as we would expect from two identical detectors observing the same stable X-ray source. 
-This case is illustrated in Figure ~\ref{fig:fourierdiff} (middle panel).
+Let us simulate two constant light curves with an incident mean count rate of 400 counts/sec and a dead time of 2.5 ms, as we would expect from two identical detectors observing the same stable X-ray source (Figure ~\ref{fig:fourierdiff}, middle panel).
 The Fourier amplitudes $A_{xj}$ and $A_{yj}$ of the light curves from the two detectors are heavily distorted by dead time, with the characteristic damped oscillator-like shape \citep{Vikhlinin+94,Zhang+95}. 
 As laid out in Section \ref{sec:fourierdiff}, the difference of Fourier amplitudes from two independent but identical detectors shows no source variability, but \textit{still shows the same distortion} due to dead time.
 This gives a clear way to disentangle between source- and dead time-driven variability.
 By using the difference between the Fourier amplitudes in two detectors, we can in principle renormalize the power spectrum so that only the source variability alters its otherwise flat shape.
 
-As shown in Figure~\ref{fig:fourierdiff} (left panel), the single-channel Fourier amplitudes are proportional to the difference of the Fourier amplitudes in different realizations, with a constant factor $1/\sqrt{2}$.
+As shown in Figure~\ref{fig:fourierdiff} (right panel), the single-channel Fourier amplitudes are proportional to the difference of the Fourier amplitudes in different realizations, with a constant factor $1/\sqrt{2}$.
 Therefore, we expect that the periodogram will be proportional to the square of the Fourier amplitude difference, divided by 2.
 Let us try to \textit{divide the power spectrum by a smoothed version of the squared Fourier differences}, and multiply by 2.
 For smoothing, we used a Gaussian running window with a window width of 50 bins.
