@@ -1,6 +1,15 @@
 from pandas import read_csv
 import matplotlib.pyplot as plt
 import numpy as np
+import sys
+import time
+import logging
+from watchdog.observers import Observer
+from watchdog.events import LoggingEventHandler
+from watchdog.events import PatternMatchingEventHandler
+from hendrics.base import r_in, r_det
+import warnings
+warnings.filterwarnings('ignore')
 
 
 def plot_scatter_ratios(results, channel, toler_d_clean=0.01,
@@ -46,8 +55,8 @@ def pairplot(file, toler_d_clean=0.5, filters={'channel_ratio': [0.8, 1.2]}):
     meanrate = results['incident_rate'] // 100 * 100 + 50
     results["rate"] = meanrate
     results["median_ratio"] = results['median'] / results['clean_median']
-    vars_unfilt = ['channel_ratio', 'frequency', 'Frac_rms',
-            'CS', 'PDS 1', 'PDStot', 'slope', 'median_ratio']
+    vars_unfilt = ['channel_ratio', 'frequency', 'input_fwhm', 'Frac_rms',
+            'CS', 'PDS 1', 'PDStot']
     vars = []
     for v in vars_unfilt:
         if v in results:
@@ -118,7 +127,8 @@ def offset(x, q):
 
 
 def fit_incident_vs_delta(file, toler_d_clean=0.01, 
-                          filters={'channel_ratio': [0.8, 1.2]}):
+                          filters={'channel_ratio': [0.8, 1.2]},
+                          nsub=9):
     from scipy.optimize import curve_fit
     from matplotlib.pyplot import cm
     from matplotlib.gridspec import GridSpec
@@ -136,10 +146,11 @@ def fit_incident_vs_delta(file, toler_d_clean=0.01,
     ax0 = plt.subplot(gs[0, 0])
     ax1 = plt.subplot(gs[1, 0])
     ax2 = plt.subplot(gs[:, 1])
-    nsub = 9
+
     frac_rmss = np.linspace(0.05,
                             np.max(results['Frac_rms']), nsub)
     colors=iter(cm.magma(np.linspace(0,1,nsub)))
+    plotcolors = []
     coeffs = []
     for frac_rms_min, frac_rms_max in zip(frac_rmss[:-1], frac_rmss[1:]):
         good_rms = (results['Frac_rms'] >= frac_rms_min)&(results['Frac_rms'] < frac_rms_max)
@@ -155,7 +166,8 @@ def fit_incident_vs_delta(file, toler_d_clean=0.01,
             coeffs.append(par[0])
         except:
             coeffs.append(np.nan)
-         
+        plotcolors.append(color)
+
     coeffs = np.array(coeffs)
     ax0.set_xlabel('Incident count rate')
     ax0.set_ylabel('rms relative error')
@@ -164,7 +176,7 @@ def fit_incident_vs_delta(file, toler_d_clean=0.01,
     colors=cm.magma(np.linspace(0,1,nsub))
 
     frac_rmss = np.mean(list(zip(frac_rmss[:-1], frac_rmss[1:])), axis=1)
-    ax1.scatter(frac_rmss, coeffs, c=colors)
+    ax1.scatter(frac_rmss, coeffs, c=plotcolors)
     good = coeffs == coeffs
     par, pcov = curve_fit(square, frac_rmss[good], coeffs[good], p0=[0.0])
     x = np.linspace(0, np.max(results['Frac_rms']), 50)
@@ -281,54 +293,113 @@ def fit_pds_quantities_vs_rms(file, toler_d_clean=0.01,
     cb.set_label('Fractional rms')
     return retval
 
-if __name__ == '__main__':
-    import sys
-    import time
-    from hendrics.base import r_in, r_det
-    import warnings
-    warnings.filterwarnings('ignore')
-    infile = sys.argv[1]
 
-    toler_d_clean = 0.01
-#    plt.ion()
-    post_filters = {'channel_ratio': [0.7, 1.5]}
-    for f in np.logspace(1, np.log10(500), 5):
-        filters ={'frequency': [f, f + 30]}
+
+class MyHandler(PatternMatchingEventHandler):
+    patterns = ["*.csv"]
+    def process(self, event):
+        """
+        event.event_type
+            'modified' | 'created' | 'moved' | 'deleted'
+        event.is_directory
+            True | False
+        event.src_path
+            path/to/observed/file
+        """
+        # the file will be processed there
+#        print(event.src_path, event.event_type)  # print now only for degug
+
+        print(event.src_path)
+        infile = event.src_path
+
+        toler_d_clean = 0.01
+        #    plt.ion()
+        post_filters = {'channel_ratio': [0.7, 1.5]}
         table = read_csv(infile)
         table['ratio'] = table['median'] / table['clean_median']
-        table['inc_to_det'] = table['incident_rate'] / r_det(2.5e-3, table['incident_rate'])
+        table['inc_to_det'] = \
+            table['incident_rate'] / r_det(2.5e-3, table['incident_rate'])
         table['median_corr'] = table['median'] / table['inc_to_det']
         table['ratio_corr'] = table['median_corr'] / table['clean_median']
-        table.to_csv('bubu.csv')
-        file = 'bubu.csv'
+        table.to_csv('bubu.ecsv')
+        freqs = np.logspace(1, np.log10(500), 2)
+        for f0, f1 in zip(freqs[:-1], freqs[1:]):
+            filters ={'frequency': [f0, f1]}
+            file = 'bubu.ecsv'
+#            try:
+            pairplot(file, toler_d_clean=toler_d_clean, filters=filters)
+#            slope = fit_pds_quantities_vs_rms(file, toler_d_clean=0.01,
+#                                              filters={**filters,
+#                                                       **post_filters},
+#                                              quantity='CS', offset=0)
+#            except Exception as e:
+#                print(str(e))
+#                continue
+#            print(f + 15, slope)
+        plt.draw()
 
-    #        plot_all(file, toler_d_clean=toler_d_clean)
-#        pairplot(file, toler_d_clean=toler_d_clean, filters=filters)
-    #       pairplot_gain(file, toler_d_clean=toler_d_clean)
-    #        stats(file, toler_d_clean=toler_d_clean)
-    #        scatter_matrix(file, toler_d_clean=toler_d_clean)
-    #       fit_incident_vs_delta(file, toler_d_clean=toler_d_clean)
-        slope = fit_pds_quantities_vs_rms(file, toler_d_clean=0.01,
-                                          filters={**filters, **post_filters},
-                                          quantity='CS', offset=0)
-        print(f + 15, slope)
-    #        fit_pds_quantities_vs_rms(file, toler_d_clean=0.01,
-    #                             filters={**filters, **post_filters},
-    #                             quantity='median', offset=0, fix=False)
-    #        fit_pds_quantities_vs_rms(file, toler_d_clean=0.01,
-    #                             filters={**filters, **post_filters},
-    #                             quantity='clean_median', offset=0, fix=False)
-    #        fit_pds_quantities_vs_rms(file, toler_d_clean=0.01,
-    #                                  filters={**filters, **post_filters},
-    #                                  quantity='ratio', offset=1, fix=True,
-    #                                  slope_fit_kind='linear')
-    #        fit_pds_quantities_vs_rms(file, toler_d_clean=0.01,
-    #                                  filters={**filters, **post_filters},
-    #                                  quantity='inc_to_det', offset=1, fix=True,
-    #                                  slope_fit_kind='linear')
-    #        fit_pds_quantities_vs_rms(file, toler_d_clean=0.01,
-    #                                  filters={**filters, **post_filters},
-    #                                  quantity='ratio_corr', offset=1, fix=True,
-    #                                  slope_fit_kind='linear')
+    def on_modified(self, event):
+        plt.close('all')
+        time.sleep(1)
+        self.process(event)
 
-        plt.show()
+    def on_created(self, event):
+        if event.is_directory:
+            print("New directory created")
+            self.process(event)
+
+
+if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO,
+                        format='%(asctime)s - %(message)s',
+                        datefmt='%Y-%m-%d %H:%M:%S')
+    path = sys.argv[1] if len(sys.argv) > 1 else '.'
+    event_handler = MyHandler()
+    observer = Observer()
+    plt.ion()
+    observer.schedule(event_handler, path, recursive=True)
+    observer.start()
+    try:
+        while True:
+            time.sleep(1)
+    except KeyboardInterrupt:
+        observer.stop()
+    observer.join()
+
+
+#if __name__ == '__main__':
+#    import sys
+#    import time
+#    from hendrics.base import r_in, r_det
+#    import warnings
+#    warnings.filterwarnings('ignore')
+#
+#
+#
+#    #        plot_all(file, toler_d_clean=toler_d_clean)
+##        pairplot(file, toler_d_clean=toler_d_clean, filters=filters)
+#    #       pairplot_gain(file, toler_d_clean=toler_d_clean)
+#    #        stats(file, toler_d_clean=toler_d_clean)
+#    #        scatter_matrix(file, toler_d_clean=toler_d_clean)
+#    #       fit_incident_vs_delta(file, toler_d_clean=toler_d_clean)
+#    #        fit_pds_quantities_vs_rms(file, toler_d_clean=0.01,
+#    #                             filters={**filters, **post_filters},
+#    #                             quantity='median', offset=0, fix=False)
+#    #        fit_pds_quantities_vs_rms(file, toler_d_clean=0.01,
+#    #                             filters={**filters, **post_filters},
+#    #                             quantity='clean_median', offset=0, fix=False)
+#    #        fit_pds_quantities_vs_rms(file, toler_d_clean=0.01,
+#    #                                  filters={**filters, **post_filters},
+#    #                                  quantity='ratio', offset=1, fix=True,
+#    #                                  slope_fit_kind='linear')
+#    #        fit_pds_quantities_vs_rms(file, toler_d_clean=0.01,
+#    #                                  filters={**filters, **post_filters},
+#    #                                  quantity='inc_to_det', offset=1, fix=True,
+#    #                                  slope_fit_kind='linear')
+#    #        fit_pds_quantities_vs_rms(file, toler_d_clean=0.01,
+#    #                                  filters={**filters, **post_filters},
+#    #                                  quantity='ratio_corr', offset=1, fix=True,
+#    #                                  slope_fit_kind='linear')
+#
+#        plt.show()
+
