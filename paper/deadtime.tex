@@ -550,7 +550,7 @@ The cospectrum has indeed the advantage of not requiring white noise level subtr
 A number of jupyter notebooks is available the address \href{https://github.com/matteobachetti/deadtime-paper-II}{https://github.com/matteobachetti/deadtime-paper-II} to reproduce the full analysis plotted in the Figures of this paper, plus more examples of application of these techniques to simulated and real data.
 The full algorithm described in Section~\ref{sec:fad} is contained in the \texttt{fad\_correction.py} file in the notebooks directory, for reference.
 In all cases, we find that the adjustment of the white noise standard deviation in the periodogram and the cospectrum works remarkably well, allowing to make a confident analysis of X-ray variability even in sources where this was precluded until now.
-Only in cases where the count rate and the \rms are \textit{both} very high (>1000 ct/s incident, >40\% resp.), the FAD correction leads to an overestimation the \rms, even if the white noise level of the periodogram remains flat.
+Only in cases where the count rate and the \rms are \textit{both} very high ($>$500 ct/s incident, $>$40\% resp.), the FAD correction leads to an overestimation the \rms, even if the white noise level of the periodogram remains flat.
 In these case, we provide some example simulation code to estimate this effect in the notebooks.
 This software will be merged into the main repository of \texttt{stingray} before publication.
 
