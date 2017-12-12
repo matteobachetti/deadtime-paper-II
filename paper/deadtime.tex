@@ -545,7 +545,7 @@ However, the white noise level subtraction is not always very precise due to mis
 A comparison with the FAD-corrected cospectrum, to verify visually the white noise subtraction, is always recommended: the white noise subtraction is the most important step when calculating the significance of a given feature in the periodogram \citep[e.g.][]{Barret+12,Huppenkothen+17}.
 The cospectrum has indeed the advantage of not requiring white noise level subtraction.
 
-A number of jupyter notebooks is available the address \href{https://github.com/matteobachetti/deadtime-paper-II}{https://github.com/matteobachetti/deadtime-paper-II} to reproduce the full analysis plotted in the Figures of this paper, plus more examples of application of these techniques to simulated and real data.
+A number of jupyter notebooks is available the address \href{https://github.com/matteobachetti/deadtime-paper-II}{https://github.com/matteobachetti/deadtime-paper-II} to reproduce the full analysis plotted in the Figures of this paper and more.
 The full algorithm described in Section~\ref{sec:fad} is contained in the \texttt{fad\_correction.py} file in the notebooks directory, for reference.
 In all cases, we find that the adjustment of the white noise standard deviation in the periodogram and the cospectrum works remarkably well, allowing to make a confident analysis of X-ray variability even in sources where this was precluded until now.
 Only in cases where the count rate and the \rms are \textit{both} very high ($>$500 ct/s incident, $>$40\% resp.), the FAD correction leads to an overestimation the \rms, even if the white noise level of the periodogram remains flat.
@@ -590,19 +590,6 @@ Barret, D., \& Vaughan, S. 2012, ApJ, 746, 131
 
 \bibitem[{Belloni \& Hasinger(1990)}]{BelloniHasinger90}
 Belloni, T., \& Hasinger, G. 1990, A{\&}A, 230, 103
-
-\bibitem[{Bowyer {et~al.}(1965)Bowyer, Byram, Chubb, \& Friedman}]{Bowyer+65}
-Bowyer, S., Byram, E.~T., Chubb, T.~A., \& Friedman, H. 1965, Astronomical
-  Observations from Space Vehicles, 23, 227
-
-\bibitem[{Gilfanov {et~al.}(2000)Gilfanov, Churazov, \&
-  Revnivtsev}]{Gilfanov+00}
-Gilfanov, M., Churazov, E., \& Revnivtsev, M. 2000, MNRAS, 316, 923
-
-\bibitem[{Grinberg {et~al.}(2013)Grinberg, Hell, Pottschmidt, B{\"o}ck, Nowak,
-  Rodriguez, Bodaghee, Cadolle~Bel, Case, Hanke, K{\"u}hnel, Markoff, Pooley,
-  Rothschild, Tomsick, Wilson-Hodge, \& Wilms}]{Grinberg+13}
-Grinberg, V., Hell, N., Pottschmidt, K., {et~al.} 2013, 554, 88
 
 \bibitem[{{Huppenkothen} {et~al.}(2016){Huppenkothen}, {Bachetti}, {Stevens},
   {Migliari}, \& {Balm}}]{huppenkothen2016}
