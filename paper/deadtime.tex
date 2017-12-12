@@ -281,25 +281,23 @@ The periodogram, commonly referred to as power density spectrum (PDS)%
 , which is the most widely used statistical tool to investigate rapid variability, is heavily distorted by dead time, with a characteristic pattern similar to a damped oscillator.
 This pattern is stronger for brighter sources, and it is often not possible to disentangle this power spectral distortion due to dead time and the broadband noise components characterizing the emission of accreting systems.
 In the special case where dead time is constant, its shape can be modeled precisely \citep{Zhang+95,Vikhlinin+94}.
-However, dead time is often different on an event-to-event basis, and it is not obvious how to model it precisely, also because the information on dead time is often incomplete in the data files distributed by HEASARC%
-\footnote{Whereas in principle this information could be obtained by using the PRIOR column in the unfiltered event files for some missions, the live time given in this column is affected by events that are not recorded in the file, like shield vetos in the case of \nustar, and the estimate of dead time is necessarily uncertain}%
-.
-For a more thorough discussion about different dead time behaviors see \citet{Zhang+95}.
+However, dead time is often different on an event-to-event basis (e.g., in \nustar), and it is not obvious how to model it precisely, also because the information on dead time is often incomplete in the data files distributed by HEASARC \citep[see, e.g.][]{Bachetti+15}.
+%\footnote{Whereas in principle this information could be obtained by using the PRIOR column in the unfiltered event files for some missions, the live time given in this column is affected by events that are not recorded in the file, like shield vetos in the case of \nustar, and the estimate of dead time is necessarily uncertain}%
+
+%For a more thorough discussion about different dead time behaviors see \citet{Zhang+95}.
 
 When using data from missions carrying two or more \textit{identical and independent} detectors like \nustar, \citet{Bachetti+15} proposed an approach to mitigate instrumental effects like dead time exploiting this redundancy: 
 where in standard analysis, light curves of multiple detectors are summed before Fourier transforming the summed light curve, 
 it is possible to instead Fourier-transform the signal of two independent detectors and combine the Fourier amplitudes in a \textit{cospectrum} -- the real part of the cross spectrum -- instead of the periodogram. 
 Since dead time is uncorrelated between the two detectors, the resulting powers have a mean white noise level fixed to 0, which resolves the first and most problematic issue created by dead time (see details in \citealt{Bachetti+15}); however, the resulting powers no longer follow the statistical distribution expected for power spectra, and their probability distribution is frequency-dependent.
 Whereas a noise cospectrum in the absence of dead time would follow a Laplace distribution (Huppenkothen and Bachetti, sub.),
-dead time affects the width of the probability distribution for cospectral powers and modulates the measured \rms proportionally to the distortion acted on power spectra.
+dead time affects the width of the probability distribution for cospectral powers and modulates the measured \rms similarly to the distortion acted on power spectra.
 In this Letter, we show a method to precisely recover the shape of the power density spectrum by looking at the difference of the Fourier amplitudes of the light curves of two independent detectors.
 This difference, in fact, contains information on the uncorrelated noise produced by dead time, but not on the source-related  signal which is correlated between the two detectors.
 This allows to disentangle the effects of dead time from those of the source variability.
 
-In \sref{sec:data} we briefly describe our data analysis and simulation setup.
-In \sref{sec:fourierdiff} we show that, in the absence of dead time, the Fourier amplitudes of two independent detectors contain the sum of the correlated signal (the source signal) and uncorrelated noise (detector-related noise), and that their difference eliminates the source part. 
-In \sref{sec:wndeadtime} we show that, in the presence of dead time, the difference of the Fourier amplitude still eliminates the source signal but retains information on dead time effects.
-In \sref{sec:correction} we show that this can be used to recover the dead noise-free power spectrum.
+In \sref{sec:fourierdiff} we show that, in the absence of dead time, the difference of the Fourier amplitudes calculated  two independent detectors contain the sum of the correlated signal (the source signal) and uncorrelated noise (detector-related noise), and that their difference eliminates the source part. 
+In \sref{sec:fadsec} we use extensive simulations to show how to use this fact to correct deadtime-affected periodograms, and we describe the limitations of this method.
 
 %%%%%%%%%%%%%%%%%%%%%%%% SECTION 2 %%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -333,7 +331,7 @@ F_{xj} - F_{yj} = (S_{xj} - S_{yj})\cdot D_j = (S_{xnj} - S_{ynj})\cdot D_j
 \end{equation}
 So, in practice, the real and imaginary parts of the Fourier amplitude \textit{difference} between two simultaneous lightcurves of the same signal from identical detectors will be a random variate of the form $\Normal(0, 2\sigma_{n}^2)$ for both the imaginary and real parts, \textit{multiplied} by the Fourier transform of the dead time filter.
 But the squared norm of the latter \textit{is also what is distorting the periodograms}!
-However, in the case of periodograms the source power spectrum is mingled with the shape of $|\mathcal{D}|^2$, while in this case we have a \textit{constant-scatter} random variable which is modulated by the same shape. Therefore, we can try to extract the shape of $|\mathcal{D}|^2$ from the Fourier amplitude differences from the two channels, and use it to correct the shape of the periodogram.
+However, in the case of periodograms the source power spectrum is mingled with the shape of $|\mathcal{D}|^2$, while in this case we have a \textit{constant-scatter} random variable which is modulated by the same shape. Therefore, we can try to extract the shape of $|\mathcal{D}|^2$ from the Fourier amplitude differences from the two channels, and use it to correct the shape of the periodogram, and in Section~\ref{sec:caveat} we describe the limits of the method.
 
 %
 %
@@ -364,7 +362,7 @@ However, in the case of periodograms the source power spectrum is mingled with t
 
 %%%%%%%%%%%%%%%%%%%%%%%% SECTION 3 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{The FAD method} \label{sec:fad}
+\section{The FAD method} \label{sec:fadsec}
 \subsection{Data simulation} \label{sec:data}
 All simulated and real data sets in this paper were produced and/or analyzed with a combination of the two Python libraries \texttt{stingray}%
 \footnote{The library is under heavy development.
@@ -556,7 +554,8 @@ This software will be merged into the main repository of \texttt{stingray} befor
 
 
 \acknowledgments
-We thank David W. Hogg for useful discussions on the topic of Fourier analysis.
+We thank the anonymous referee for coping with the first version of this paper without trashing it.
+We thank David W. Hogg for useful discussions on the topic of Fourier analysis, and Jeff Scargle for useful suggestions and comments.
 MB is supported in part by the Italian Space Agency through agreement ASI-INAF n.2017-12-H.0 and ASI-INFN agreement n.2017-13-H.0.
 DH is supported by the James Arthur Postdoctoral Fellowship and the Moore-Sloan Data Science Environment at New York University.
 
