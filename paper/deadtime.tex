@@ -96,18 +96,19 @@
 \newcommand{\sref}{Section~\ref}
 \newcommand{\deadt}{\ensuremath{t_d}\xspace}
 
-\newcommand{\given}{\ensuremath{\,|\,}}
-\newcommand{\dd}{\ensuremath{\mathrm{d}}}
-\newcommand{\counts}{\ensuremath{y}}
-\newcommand{\pars}{\ensuremath{\theta}}
-\newcommand{\mean}{\ensuremath{\lambda}}
-\newcommand{\likelihood}{\ensuremath{{\mathcal L}}}
-\newcommand{\Poisson}{\ensuremath{{\mathcal P}}}
-\newcommand{\Uniform}{\ensuremath{{\mathcal U}}}
+\newcommand{\given}{\ensuremath{\,|\,}\xspace}
+\newcommand{\dd}{\ensuremath{\mathrm{d}}\xspace}
+\newcommand{\counts}{\ensuremath{y}\xspace}
+\newcommand{\rms}{\ensuremath{\mathrm{r.m.s.}}\xspace}
+\newcommand{\pars}{\ensuremath{\theta}\xspace}
+\newcommand{\mean}{\ensuremath{\lambda}\xspace}
+\newcommand{\likelihood}{\ensuremath{{\mathcal L}}\xspace}
+\newcommand{\Poisson}{\ensuremath{{\mathcal P}}\xspace}
+\newcommand{\Uniform}{\ensuremath{{\mathcal U}}\xspace}
 
-\newcommand{\Normal}{\ensuremath{{\mathcal N}}}
-\newcommand{\bg}{\ensuremath{\mathrm{bg}}}
-\newcommand{\word}{\ensuremath{\phi}}
+\newcommand{\Normal}{\ensuremath{{\mathcal N}}\xspace}
+\newcommand{\bg}{\ensuremath{\mathrm{bg}}\xspace}
+\newcommand{\word}{\ensuremath{\phi}\xspace}
 
 %% Reintroduced the \received and \accepted commands from AASTeX v5.2
 \received{XXXX}
@@ -241,9 +242,9 @@
 Dead time affects many of the instruments used in X-ray astronomy, by producing a strong distortion in power density spectra. This can make it difficult to model the aperiodic variability of the source or look for quasi-periodic oscillations.
 Whereas in some instruments a simple a-priori correction for dead time-affected power spectra is possible, 
 this is not the case for others such as \nustar, where the dead time is non-constant and long ($\sim$2.5\,ms).
-\citet{Bachetti+15} suggested the cospectrum obtained from light curves of independent detectors within the same instrument as a possible way out, but this solution has always only been a partial one: the measured rms was still affected by dead time, because the width of the power distribution of the cospectrum was modulated by dead time in a frequency-dependent way.
+\citet{Bachetti+15} suggested the cospectrum obtained from light curves of independent detectors within the same instrument as a possible way out, but this solution has always only been a partial one: the measured \rms was still affected by dead time, because the width of the power distribution of the cospectrum was modulated by dead time in a frequency-dependent way.
 
-In this Letter we suggest a new, powerful method to normalize cospectra and, with some caveats, even power density spectra. Our approach uses the difference of the Fourier amplitudes from two independent detectors to characterize and filter out the effect of dead time. This method is crucially important for the accurate modelling of periodograms derived from instruments affected by dead time on board current missions like \nustar and \astrosat, but also future missions such as \ixpe.
+In this Letter we suggest a new, powerful method to normalize deadtime-affected cospectra and power density spectra. Our approach uses the difference of the Fourier amplitudes from two independent detectors to characterize and filter out the effect of dead time. This method is crucially important for the accurate modeling of periodograms derived from instruments affected by dead time on board current missions like \nustar and \astrosat, but also future missions such as \ixpe.
 \end{abstract}
 
 %% Keywords should appear after the \end{abstract} command. 
@@ -267,6 +268,8 @@ X-rays: general --- methods: data analysis --- methods: statistical}
 %% tied to the reference list via symbolic KEYs. The KEY corresponds
 %% to the KEY in the \bibitem in the reference list below. 
 
+%%%%%%%%%%%%%%%%%%%%%%%% SECTION 1 %%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \section{Introduction} \label{sec:intro}
 Dead time is an unavoidable and common issue of photon-counting instruments.
 It is the time $\deadt$ that the instrument takes to process an event and be ready for the next event.
@@ -276,7 +279,7 @@ For timing analysis, the effect of dead time is far more problematic.
 The periodogram, commonly referred to as power density spectrum (PDS)%
 \footnote{here we will use the term PDS for the actual source power spectrum, and \textit{periodogram} to indicate our estimate of it, or otherwise said, the realization of the ``real'' power spectrum we observe in the data}%
 , which is the most widely used statistical tool to investigate rapid variability, is heavily distorted by dead time, with a characteristic pattern similar to a damped oscillator.
-This pattern is stronger for brighter sources, and it is often not possible to disentangle this spectral distortion due to dead time and the broadband noise components characterizing the emission of accreting systems.
+This pattern is stronger for brighter sources, and it is often not possible to disentangle this power spectral distortion due to dead time and the broadband noise components characterizing the emission of accreting systems.
 In the special case where dead time is constant, its shape can be modeled precisely \citep{Zhang+95,Vikhlinin+94}.
 However, dead time is often different on an event-to-event basis, and it is not obvious how to model it precisely, also because the information on dead time is often incomplete in the data files distributed by HEASARC%
 \footnote{Whereas in principle this information could be obtained by using the PRIOR column in the unfiltered event files for some missions, the live time given in this column is affected by events that are not recorded in the file, like shield vetos in the case of \nustar, and the estimate of dead time is necessarily uncertain}%
@@ -288,7 +291,7 @@ where in standard analysis, light curves of multiple detectors are summed before
 it is possible to instead Fourier-transform the signal of two independent detectors and combine the Fourier amplitudes in a \textit{cospectrum} -- the real part of the cross spectrum -- instead of the periodogram. 
 Since dead time is uncorrelated between the two detectors, the resulting powers have a mean white noise level fixed to 0, which resolves the first and most problematic issue created by dead time (see details in \citealt{Bachetti+15}); however, the resulting powers no longer follow the statistical distribution expected for power spectra, and their probability distribution is frequency-dependent.
 Whereas a noise cospectrum in the absence of dead time would follow a Laplace distribution (Huppenkothen and Bachetti, sub.),
-dead time affects the width of the probability distribution for cospectral powers and modulates the measured rms proportionally to the distortion acted on power spectra.
+dead time affects the width of the probability distribution for cospectral powers and modulates the measured \rms proportionally to the distortion acted on power spectra.
 In this Letter, we show a method to precisely recover the shape of the power density spectrum by looking at the difference of the Fourier amplitudes of the light curves of two independent detectors.
 This difference, in fact, contains information on the uncorrelated noise produced by dead time, but not on the source-related  signal which is correlated between the two detectors.
 This allows to disentangle the effects of dead time from those of the source variability.
@@ -298,171 +301,240 @@ In \sref{sec:fourierdiff} we show that, in the absence of dead time, the Fourier
 In \sref{sec:wndeadtime} we show that, in the presence of dead time, the difference of the Fourier amplitude still eliminates the source signal but retains information on dead time effects.
 In \sref{sec:correction} we show that this can be used to recover the dead noise-free power spectrum.
 
-\section{Data simulation and analysis} \label{sec:data}
-\subsection{Simulated datasets}
-All simulated data sets in this paper have been produced with a combination of the two Python libraries \texttt{stingray} \citep{huppenkothen2016} and \texttt{HENDRICS} \citep[formerly known as MaLTPyNT][]{2015ascl.soft02021B}, both based on Astropy \citep{astropy2013}.
-The \texttt{stingray.simulate.Simulator} class was used to simulate light curves with a given noise profile, 
-the \texttt{stingray.Eventlist.simulate\_times()} function was used to transform the light curves into event lists using rejection sampling, 
-and finally the \texttt{hendrics.fake.filter\_for\_deadtime()} function was used to apply a non-paralyzable dead time to the simulated event lists. For more details on the simulated data sets, see also Section \ref{sec:correction} and the available Jupyter notebooks\footnote{\href{https://github.com/matteobachetti/deadtime-paper-II}{https://github.com/matteobachetti/deadtime-paper-II}} \citep[for a description of Jupyter notebooks, see][]{kluyver2016jupyter}.
-
-\subsection{Cyg X-1 \nustar dataset}
-We downloaded the observation directory of ObsID 30001011009 (UT 2014-10-04) from the HEASARC using the custom \texttt{heasarc\_pipelines} package [ASCL in prep.]. 
-Starting from the standard cleaned science event files distributed by HEASARC, we applied a barycenter correction using the FTOOL \texttt{barycorr} shipped with HEASOFT 6.21 with the clock correction file n. 71 from the \nustar CALDB.
-We selected photons in a region of 50\arcsec around the nominal position of Cyg X-1 using the FTOOL \texttt{fselect}.
-We used the scripts contained in \texttt{HENDRICS} to load the event lists for the two detectors FPMA and FPMB, calibrate them to translate the PI channels into energy values, and selected photons from 3 to 79 keV.
+%%%%%%%%%%%%%%%%%%%%%%%% SECTION 2 %%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{On the difference of Fourier amplitudes} \label{sec:fourierdiff}
 \begin{figure*}
-\plottwo{imgs/rn_fourierdiff}{imgs/rn_fourierdiff_dt}
-\caption{Real Fourier amplitudes obtained by single light curves (top panels) and difference between two realizations of the same source light curve (bottom) in two cases: (Left) Strong $1/f$ red noise and no dead time, calculated over many 500\,s segments of the light curve, and (Right) no red noise and strong dead time, calculated over many 5\,s segments of the light curve. 
-The choice of different segment length reflects the range of frequencies we want to highlight in the two cases.
-The red curve gives the frequency-dependent spread of the distributions, measured by the standard deviation of the curves in each frequency bin. 
-As expected, in the first case, the Fourier amplitude follows a power law curve, while the standard deviation of the difference is remarkably stable at all frequencies, as expected by the fact that the Poisson white noise is independent of frequency. 
-In the second case, instead, dead time is frequency dependent and white noise is also affected, so that the difference of Fourier amplitudes is modulated as well.}
+\gridline{\fig{rn_fourierdiff.eps}{0.33\textwidth}{(a)}
+	\fig{wn_fourierdiff.eps}{0.33\textwidth}{(b)}
+	\fig{fourier_vs_diff_dt.eps}{0.33\textwidth}{(c)}}
+          
+\caption{(a) and (b): Real-valued Fourier amplitudes obtained by single light curves (top panels) and difference between two realizations of the same source light curve (bottom) in two cases: (a) Strong $1/f$ red noise and no dead time, calculated over many 500\,s segments of the light curve, and (b) no red noise and strong dead time, calculated over many 5\,s segments of the light curve. 
+The red curve gives the frequency-dependent spread of the distributions, measured by the mean of the absolute values of the curves in each frequency bin. 
+The different behavior of Fourier amplitude differences under pure Poisson noise and dead time noise is evident, by comparing (a) and (b).
+(c) Scatter distribution of the (averaged over multiple intervals) absolute values of dead time-affected Fourier amplitudes versus the difference of Fourier amplitudes for case (b): their relation is clearly linear, with a factor $1/\sqrt{2}$. 
+}
 \label{fig:fourierdiff}
 \end{figure*}
 
-Let us consider two identical and independent detectors observing the same variable source, producing independent time series $\mathbf{x} = \{x_k\}_{k=1}^N$ and $\mathbf{y} = \{y_k\}_{k=1}^N$. For a stochastic process (e.g.\ $1/\nu$-type red noise), the Fourier amplitudes will vary as a function of $N_{\mathrm{phot}}P(\nu)/4$, where $P(\nu)$ is the shape of the power spectrum underlying the stochastic process, and $N_{\mathrm{phot}}$ denotes the number of photons in a light curve. If the two detectors observe the same source simultaneously, the amplitudes and phases of the stochastic process will be shared among $\mathbf{x}$ and $\mathbf{y}$, while each light curve will be affected \textit{independently} by both the photon counting noise in the detector, as well as the dead time process. The resulting Fourier amplitudes will be of the form
+Let us consider two identical and independent detectors observing the same variable source, producing independent and strictly simultaneous time series, with identical binning, $\mathbf{x} = \{x_k\}_{k=1}^N$ and $\mathbf{y} = \{y_k\}_{k=1}^N$. For a stochastic process (e.g.\ $1/\nu$-type red noise), the Fourier amplitudes will vary as a function of $N_{\mathrm{phot}}P(\nu)/4$, where $P(\nu)$ (Leahy-normalized, \citealt{Leahy+83}) is the shape of the power spectrum underlying the stochastic process, and $N_{\mathrm{phot}}$ denotes the number of photons in a light curve. If the two detectors observe the same source simultaneously, the amplitudes and phases of the stochastic process will be shared among $\mathbf{x}$ and $\mathbf{y}$, while each light curve will be affected \textit{independently} by both the photon counting noise in the detector, as well as the dead time process. 
+Dead time can be considered a convolution on the signal \citep{Vikhlinin+94}. 
+As such, for the convolution theorem we will have that the Fourier transform $\mathcal{F}$ of dead time-affected light curves will result in a \textit{product} of the Fourier transform of the signal $\mathcal{S}$ times the Fourier transform of the dead time filter $\mathcal{D}$:
+\begin{equation}
+\mathcal{F}(\nu) = \mathcal{S}(\nu)\cdot\mathcal{D}(\nu)
+\end{equation}
+For a large enough number of data points $N$, the complex Fourier amplitudes $S_j$ will be composed of a sum of two independent random normal variables: $S_j = S_{sj} + S_{nj}$, with $\Re (S_{sj}) \sim \Normal(0, \sigma_{sj}^2)$ and $\Re(S_{nj}) \sim \Normal(0, \sigma_n^2)$, and similarly for the imaginary parts.
+$\sigma_{sj}^2 = \sigma_{s}^2(\nu) = N_\mathrm{phot}P(\nu)/4$ (where $N_{\mathrm{phot}} = \sum_{k=1}^{N}{x_k}$) is given by the power spectrum of the underlying stochastic process and is frequency-dependent. However, $\sigma_n^2 = N_\mathrm{phot}/2$ is not. 
+Note that $S_{xsj} = S_{ysj}$, because the amplitudes of the stationary noise process will be the same for the Fourier transforms of $\mathbf{x}$ and $\mathbf{y}$, while the components due to white noise differ between the two time series.
+Moreover, the dead time filter will only depend on the mean count rate, which is again the same in the two light curves.
+Thus, the difference between the Fourier amplitudes for the two time series $\mathbf{x}$ and $\mathbf{y}$ will be:
+\begin{equation}
+F_{xj} - F_{yj} = (S_{xj} - S_{yj})\cdot D_j = (S_{xnj} - S_{ynj})\cdot D_j
+\end{equation}
+So, in practice, the real and imaginary parts of the Fourier amplitude \textit{difference} between two simultaneous lightcurves of the same signal from identical detectors will be a random variate of the form $\Normal(0, 2\sigma_{n}^2)$ for both the imaginary and real parts, \textit{multiplied} by the Fourier transform of the dead time filter.
+But the squared norm of the latter \textit{is also what is distorting the periodograms}!
+However, in the case of periodograms the source signal is mingled with the shape of $|\mathcal{D}|^2$, while in this case we have a \textit{constant-scatter} random variable which is modulated by the same shape. Therefore, we can try to extract the shape of $|\mathcal{D}|^2$ from the Fourier amplitude differences from the two channels, and use it to correct the shape of the periodogram.
 
-\begin{eqnarray}
-A_{xj} &=& A_{xsj} + A_{xdj} + A_{xnj} \nonumber \\
-B_{xj} &=& B_{xsj} + A_{xdj} + B_{xnj} \, ,
-\end{eqnarray}
+%
+%
+%The resulting Fourier amplitudes will be of the form
+%
+%\begin{eqnarray}
+%A_{xj} &=& A_{xsj} + A_{xdj} + A_{xnj} \nonumber \\
+%B_{xj} &=& B_{xsj} + B_{xdj} + B_{xnj} \, ,
+%\end{eqnarray}
+%
+%\noindent where $A_{xsj}$ and $B_{xsj}$ denote the real and imaginary components of the signal power in the Fourier amplitudes,  $A_{xdj}$ and $B_{xdj}$ denote the variance introduced by dead time, and $A_{xnj}$ and $B_{xnj}$ similarly denote the white noise components in the Fourier amplitudes.
+%For a large enough number of data points $N$, the Fourier amplitudes $A_{xj}$ and $B_{xj}$ will be composed of a sum of three independent random normal variables, with $A_{xsj} \sim \Normal(0, \sigma_{sj}^2)$,  $A_{xdj} \sim \Normal(0, \sigma_{dj}^2)$ and $A_{xnj} \sim \Normal(0, \sigma_n^2)$, where $\sigma_{sj}^2 = \sigma_{s}^2(\nu) = N_\mathrm{phot}P(\nu)/4$ is given by the power spectrum of the underlying stochastic process, $P_j = P(\nu_j)$, $\sigma_{dj}^2$ is an unknown, frequency-dependent variance introduced by dead time, and $N_{\mathrm{phot}} = \sum_{k=1}^{N}{x_k}$ is the integrated flux in the light curve. We also have $\sigma_n^2 = N_\mathrm{phot}/2$, and hence the combined distributions become
+%
+%\begin{eqnarray}
+%A_{xj} &\sim & \Normal(0, \sigma_{sj}^2 + \sigma_{dj}^2 + \sigma_{n}^2) \nonumber \\
+%A_{yj} &\sim & \Normal(0, \sigma_{sj}^2 + \sigma_{dj}^2 + \sigma_{n}^2) \nonumber \, .
+%\end{eqnarray}
+%
+%\noindent Similar expressions can be found for $A_{yj}$ and $B_{yj}$, respectively. It is important to note that $A_{xsj} = A_{ysj}$ and similarly $B_{xsj} = B_{ysj}$, that is, the amplitudes of the stationary noise process will be the same for the Fourier transforms of $\mathbf{x}$ and $\mathbf{y}$, while the components due to dead time and white noise differ between the two time series.
+%
+%As depicted in Figure~\ref{fig:fourierdiff}, the correlation between Fourier amplitudes implies that their difference will be independent of the source-induced variability $P(\nu_j)$ and will again be distributed following a normal distribution 
+%
+%\[
+%A_{xj} - A_{yj} \sim \Normal(0, 2\sigma_{dj}^2 + 2\sigma_{n}^2) \; .
+%\]
+%
+%\noindent The difference in Fourier amplitudes effectively separates the frequency-dependent effects of source variability and variability due to detector effects.
 
-\noindent where $A_{xsj}$ and $B_{xsj}$ denote the real and imaginary components of the signal power in the Fourier amplitudes,  $A_{xdj}$ and $B_{xdj}$ denote the variance introduced by dead time, and $A_{xnj}$ and $B_{xnj}$ similarly denote the white noise components in the Fourier amplitudes.
-For a large enough number of data points $N$, the Fourier amplitudes $A_{xj}$ and $B_{xj}$ will be composed of a sum of three independent random normal variables, with $A_{xsj} \sim \Normal(0, \sigma_{sj}^2)$,  $A_{xdj} \sim \Normal(0, \sigma_{dj}^2)$ and $A_{xnj} \sim \Normal(0, \sigma_n^2)$, where $\sigma_{sj}^2 = \sigma_{s}^2(\nu) = N_\mathrm{phot}P(\nu)/4$ is given by the (Leahy-normalized, \citealt{Leahy+83}) power spectrum of the underlying stochastic process, $P_j = P(\nu_j)$, $\sigma_{dj}^2$ is an unknown, frequency-dependent variance introduced by dead time, and $N_{\mathrm{phot}} = \sum_{k=1}^{N}{x_k}$ is the integrated flux in the light curve. We also have $\sigma_n^2 = N_\mathrm{phot}/2$, and hence the combined distributions become
+%%%%%%%%%%%%%%%%%%%%%%%% SECTION 3 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{eqnarray}
-A_{xj} &\sim & \Normal(0, \sigma_{sj}^2 + \sigma_{dj}^2 + \sigma_{n}^2) \nonumber \\
-A_{yj} &\sim & \Normal(0, \sigma_{sj}^2 + \sigma_{dj}^2 + \sigma_{n}^2) \nonumber \, .
-\end{eqnarray}
+\section{The FAD method} \label{sec:fad}
+\subsection{Data simulation} \label{sec:data}
+All simulated and real data sets in this paper were produced and/or analyzed with a combination of the two Python libraries \texttt{stingray}%
+\footnote{The library is under heavy development.
+    For this work we used the version identified by the hash \texttt{3e64f3d}.
+    See \href{https://github.com/StingraySoftware/notebooks/}{https://github.com/StingraySoftware/notebooks/} for tutorials on simulations, light curve production and timing analysis with Stingray}
+\citep{huppenkothen2016} and \texttt{HENDRICS} v.\texttt{3.0b2} \citep[formerly known as MaLTPyNT;][]{2015ascl.soft02021B}, both based on Astropy \citep{astropy2013}.
 
-\noindent Similar expressions can be found for $A_{yj}$ and $B_{yj}$, respectively. It is important to note that $A_{xsj} = A_{ysj}$ and similarly $B_{xsj} = B_{ysj}$, that is, the amplitudes of the stationary noise process will be the same for the Fourier transforms of $\mathbf{x}$ and $\mathbf{y}$, while the components due to dead time and white noise differ between the two time series.
+We used the same procedure and algorithms described by \citet{Bachetti+15}, Section 4, that we briefly recall here together with references to the methods and classes of the libraries above where these steps are implemented.
+%The classes in the \texttt{stingray.simulate} module were used to simulate light curves with a given noise profile. 
+We used the \citet{timmer1995} method to create a noise-affected light curve starting from a given power spectral shape. 
+This method is implemented in the \texttt{stingray.simulate} module.
+%We first created the noisy light curves and then used an acceptance-rejection method to obtain simulated events. 
+This step needs to be done carefully: if the initial light curves contain significant random noise, the process for the creation of events creates a random variate on the top of the local count rate - which is varying randomly already - producing a non-Poissonian final light curve. 
+So, we initially simulated light curves with a very high ``count rate'' - so that the Poisson noise was relatively small - then renormalized the light curves to the wanted (lower) count rate and \rms and finally used these light curves to simulate event lists using the rejection sampling, implemented in the \texttt{stingray.Eventlist.simulate\_times()} method.
+Then, the \texttt{hendrics.fake.filter\_for\_deadtime()} function was used to apply a non-paralyzable dead time of 2.5\,ms to the simulated event lists. For more details on the simulated data sets, see also Section \ref{sec:correction} and the available Jupyter notebooks%
+\footnote{\href{https://github.com/matteobachetti/deadtime-paper-II}{https://github.com/matteobachetti/deadtime-paper-II}} \citep[for a description of Jupyter notebooks, see][]{kluyver2016jupyter}.
+After producing these synthetic event lists, we started the standard timing analysis: we produced light curves with a bin time of $\sim0.122$\,ms, and calculated power spectral products (cospectrum, periodogram) over segments of these light curves using \texttt{stingray}.
 
-As depicted in Figure~\ref{fig:fourierdiff}, the correlation between Fourier amplitudes implies that their difference will be independent of the source-induced variability $P(\nu_j)$ and will again be distributed following a normal distribution 
 
-\[
-A_{xj} - A_{yj} \sim \Normal(0, 2\sigma_{dj}^2 + 2\sigma_{n}^2) \; .
-\]
+%\subsection{Cyg X-1 \nustar dataset}
+%We tested the method also on real data of several bright sources observed by \nustar.
+%As an example, we report here one such test done on \nustar data of the black hole binary Cyg~X-1 together with the steps to reproduce our analysis, using the linked Jupyter notebook if needed.
+%We downloaded the observation directory of \nustar ObsID 30001011009 (UT 2014-10-04) from the HEASARC using the custom \texttt{heasarc\_pipelines} package (Bachetti et al., ASCL identifier requested). 
+%Equivalently, this download can be done using the online tools provided by HEASARC (e.g. \texttt{xamin}).
+%Starting from the standard cleaned science event files distributed by HEASARC, we applied a barycenter correction using the FTOOL \texttt{barycorr} shipped with HEASOFT 6.21 with the clock correction file n. 71 from the \nustar CALDB.
+%We selected photons in a region of 50\arcsec around the nominal position of Cyg X-1 using the FTOOL \texttt{fselect}.%
+%\footnote{To use the method on different sources, it is sufficient to download a different ObsID and change the region file containing the position of the source}.
+%We used the scripts contained in \texttt{HENDRICS} to load the event lists for the two detectors FPMA and FPMB, calibrate them to translate the PI channels into energy values, and produced light curves with photons from 3 to 79 keV and binned with uniform time bins of 1/4096$\sim2.44\cdot10^{-4}$\,sec%
+%\footnote{This procedure uses the scripts \texttt{HENreadfile}, \texttt{HENcalibrate} and \texttt{HENlcurve}, as described at\\ \href{http://hendrics.readthedocs.io/en/master/tutorials/quicklook.html}{http://hendrics.readthedocs.io/en/master/tutorials/quicklook.html}}.
 
-\noindent The difference in Fourier amplitudes effectively separates the frequency-dependent effects of source variability and variability due to detector effects.
- 
-\section{dead time-affected white noise} \label{sec:wndeadtime}
+
+%%%%%%%%%%%%%%%%%%%%%%%% SECTION 4 %%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{First test: white noise} \label{sec:wndeadtime}
 
 \begin{figure*}
-\gridline{\fig{imgs/fourier_vs_diff_dt}{0.3\textwidth}{(a)}
-          \fig{imgs/pds_pdf}{0.3\textwidth}{(b)}
-          \fig{imgs/cosp_pdf}{0.3\textwidth}{(c)}}
+\plotone{before_and_after.eps}
+%\plotone{pds_pdf.pdf}
+\caption{Periodogram and cospectrum, before and after FAD correction, for a pure white noise light curve. 
+The deadtime-driven distortion of the white noise level in the periodogram, and the frequency-dependent modulation of the \rms in both spectra, disappear after applying the FAD correction. 
+Spectra were calculated over 2-sec intervals and averaged, to decrease the scatter and highlight the distortion of powers.}
+\label{fig:comparison}
+\end{figure*}
 
-\caption{(a) Scatter distribution of dead time-affected Fourier amplitudes versus the difference of Fourier amplitudes:
-their relation is clearly linear, with a factor $1/\sqrt{2}$. 
-(b) Distribution of powers in the periodogram, before the FAD correction and after, shown as a histogram.
-After correction, the powers follow remarkably well the expected $\chi^2_2$ distribution.
-(c) Same, for the cospectrum.
-The correct Laplace distribution is followed after FAD correction}
+\begin{figure*}
+\plotone{pds_pdf.pdf}
+\caption{PDF of non-averaged powers in the cospectrum (red) and the periodogram (black), before the FAD correction and after, shown as a histogram. 
+After correction, the powers follow remarkably well the expected Laplace and $\chi^2_2$ distributions respectively, as highlighted by the overplotted probability density functions (PDF).}
 \label{fig:dist}
 \end{figure*}
 
-Let us simulate two constant light curves with an incident mean count rate of 400 counts/sec and a dead time of 2.5 ms, as we would expect from two identical detectors observing the same stable X-ray source. 
-This case is illustrated in Figure ~\ref{fig:fourierdiff} (right panel).
-The Fourier amplitudes $A_{xj}$ and $A_{yj}$ of the light curves from the two detectors are heavily distorted by dead time, with the characteristic damped oscillator-like shape \citep{Vikhlinin+94,Zhang+95}. 
+Let us simulate two constant light curves with an incident mean count rate of 400 counts/sec and a dead time of 2.5 ms, as we would expect from two identical detectors observing the same stable X-ray source.
+The Fourier amplitudes of the light curves from the two detectors are heavily distorted by dead time, with the characteristic damped oscillator-like shape \citep{Vikhlinin+94,Zhang+95}  (Figure ~\ref{fig:fourierdiff}, middle panel). 
 As laid out in Section \ref{sec:fourierdiff}, the difference of Fourier amplitudes from two independent but identical detectors shows no source variability, but \textit{still shows the same distortion} due to dead time.
-This gives a clear way to disentangle between source- and dead time-driven variability.
-By using the difference between the Fourier amplitudes in two detectors, we can in principle renormalize the power spectrum so that only the source variability alters its otherwise flat shape.
+Therefore, using the difference between the Fourier amplitudes in two detectors, we can in principle renormalize the power spectrum so that only the source variability alters its otherwise flat shape.
 
-As shown in Figure~\ref{fig:dist} (left panel), the single-channel Fourier amplitudes are proportional to the difference of the Fourier amplitudes in different realizations, with a constant factor $1/\sqrt{2}$.
+As shown in Figure~\ref{fig:fourierdiff} (right panel), the single-channel Fourier amplitudes are proportional to the difference of the Fourier amplitudes in different realizations, with a constant factor $1/\sqrt{2}$.
 Therefore, we expect that the periodogram will be proportional to the square of the Fourier amplitude difference, divided by 2.
 Let us try to \textit{divide the power spectrum by a smoothed version of the squared Fourier differences}, and multiply by 2.
 For smoothing, we used a Gaussian running window with a window width of 50 bins.
 Given that the initial binning had 50 bins/Hz, this interpolation allows an aggressive smoothing over bins whose y value does not change significantly.
-In general, we recommend smoothing over as many bins as allowed by the shape of the periodogram.
-In this paper, when not specified we average over the number of bins contained in 1Hz of the spectrum.
 We call this procedure the \textbf{Fourier Amplitude Difference} (hereafter FAD) \textbf{correction}.
 
-The correction is depicted in Figure~\ref{fig:pds}, right. 
-Starting from a heavily distorted distribution of the powers, applying the FAD correction reinstates a remarkably correct distribution of powers, following the expected $\chi^2_2$ distribution \citep{Lewin+88} very closely.
-Analogously, the corrected cospectrum will follow the expected Laplace distribution.
-While the original dead time-affected cospectrum had a frequency-dependent modification to the rms level, the FAD-corrected cospectrum gets back to a frequency-independent shape, like in the dead time-free case.
+The correction is depicted in Figure~\ref{fig:comparison}. 
+Starting from a heavily distorted distribution of the powers, applying the FAD correction ``flattens'' remarkably well the white noise level of the periodogram and the distribution of the scatter of the white noise periodogram and cospectrum. 
+Also, it reinstates a correct distribution of powers, following the expected $\chi^2_2$ distribution \citep{Lewin+88} very closely. 
+Analogously, the corrected cospectrum will follow the expected Laplace distribution \citep{Huppenkothen & Bachetti, sub.}.
+While the original dead time-affected cospectrum had a frequency-dependent modification to the \rms level, the FAD-corrected cospectrum gets back to a frequency-independent shape, like in the dead time-free case.
 
-\section{Testing the FAD correction on simulated data} \label{sec:correction}
+%%%%%%%%%%%%%%%%%%%%%%%% SECTION 5 %%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{The FAD algorithm in detail} \label{sec:fad}
+In practice, the FAD correction algorithm in a generic case would work as follows:
+\begin{enumerate}
+\item split the two light curves in segments as one would do to calculate standard averaged periodograms;
+\item for each pair of light curve segments: 
+	\begin{itemize}
+	\item calculate the Fourier transform of each channel separately, and then of the summed channels (hereafter total-intensity);
+	\item save the unnormalized Fourier amplitudes;
+	\item multiply these Fourier amplitudes by $\sqrt{2/N_{ph}}$ (that would give Leahy-normalized periodograms if squared);
+	\item subtract the Leahy-normalized Fourier amplitudes of the two channels between them, \textit{take the absolute value}, and obtain this way the Fourier Amplitude Differences (FAD);
+	\item \textit{smooth} the FAD using a Gaussian-window interpolation with a large number of bins, in our case all the bins contained in 1-2 Hz;
+	\item use the separated single-channel and total-intensity \textit{unnormalized} Fourier amplitudes to calculate the periodograms;
+	\item use the unnormalized Fourier amplitudes from channels A and B to calculate the cospectrum;
+	\item divide all periodograms and the cospectrum by the smoothed and squared FAD, and multiply by 2.
+	\end{itemize}
+\item normalize the periodograms to the wanted normalization (Leahy or fractional \rms).
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%% SECTION 6 %%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{FAD correction of generic variable periodograms} \label{sec:correction}
 
 \begin{figure*}
-    \gridline{\fig{imgs/rednoise_rebin}{0.33\textwidth}{(a)}
-        \fig{imgs/rednoise_rebin_zoom}{0.33\textwidth}{(b)}
-        \fig{imgs/simu_rebin_log}{0.33\textwidth}{(c)}}
-    \gridline{\fig{imgs/cygx1_soft_nustar_2_rebin}{0.33\textwidth}{(d)}
-        \fig{imgs/cygx1_soft_nustar_2_rebin_zoom}{0.33\textwidth}{(e)}
-        \fig{imgs/cygx1_soft_nustar_2_rebin_log}{0.33\textwidth}{(f)}}  
-    \caption{
-        Top: simulated dataset with two strong and broad Lorentzian components, incident count rate $\sim$810 ct/s, and total rms $\sim$15\% (``detected'' after dead time: $\sim$270 and $\sim$4\% resp.).
-        Bottom: \nustar observation of the black hole candidate Cyg X-1. 
-        (a) and (d): comparison of the distortion of the dead time-affected periodogram with the FAD-corrected periodogram, the dead time-affected and the FAD-corrected cospectrum. The spectra have been shifted vertically for clarity.
-        The shape of the uncorrected periodogram is clearly distorted by dead time. 
-        (b) and (e): the FAD correction successfully flattens the periodogram, but there remain a few intervals where the baseline is imperfect, indicated by the arrows.
-        This is due to the flux mismatch between the two detectors (see \sref{sec:realdata}).
-        The cospectral powers are always distributed around zero, but dead time changes the width of the resulting distribution, and the FAD correction attenuates the width of the distribution back to the width expected in the dead time-free case (see e.g.\ (b) for a striking case).
-        Moreover, the source-dominated part of the spectrum also receives a boost, which corrects precisely the measured rms of the source from the ``hushing'' effect of dead time.
-        (c) and (f): FAD-corrected periodogram and cospectra, plotted in $\mathrm{(rms/mean)}^2$ normalization and fitted with two Lorentzian curves (c) and with an exponential cutoff power law (f).
-        The additional gain coming from the FAD normalization is evident by the comparison with the uncorrected cospectrum.}
+    \plotone{four_qpos.eps}
+    \caption{Periodograms and cospectra from a simulation with four Lorentzian features (at 50, 200, 300 and 400 Hz) with 40-Hz full with at half maximum (FWHM). 
+    We plotted and fitted periodograms and cospectra before and after applying the dead time filter
+    The total \rms before dead time was 40\% and the incident photon flux 400 ct/s. 
+    After applying a dead time of 2.5 ms like in \nustar, the ``detected'' photon flux decreased to $\sim$200 ct/s as expected. 
+    As can be seen from the best-fit curves, there is no significant difference between FAD-normalized and deadtime-free periodograms and cospectra.
+    For comparison, we also plot the cospectrum without FAD (pink), showing very different amplitudes for the four Lorentzians, due to dead time.
+    }
     \label{fig:pds}
 \end{figure*}
 
 We are now ready to verify the last step: is the FAD-corrected power spectrum equivalent (albeit with some loss of sensitivity due to the lower number of photons) to the dead time-free power spectrum?
-To test this, we produced a number of different synthetic datasets, containing different combinations of QPOs and broadband noise components. 
-We first calculated the periodogram of the dead time-free data.
-Then, we applied a dead time filter and calculated the power density spectrum and the cospectrum. 
-At this point, we applied the FAD correction, as follows:
-\begin{enumerate}
-\item split the two light curves in segments of 128 to 512 seconds
-\item for each pair of light curve segments: 
-	\begin{itemize}
-	\item calculate the Fourier transform of each channel separately, and then of the summed channels;
-	\item multiply the Fourier amplitudes by $\sqrt{2/N_{ph}}$ in order to obtain Leahy-normalized periodograms;
-	\item subtract the Fourier amplitudes of the two channels between them and obtain the Fourier Amplitude Difference (FAD);
-	\item \textit{smooth} the FAD using a Gaussian-window interpolation with a width of 1-2 seconds;
-	\item use the separated single-channel and summed Fourier amplitudes to calculate the periodograms;
-	\item use the Fourier amplitudes from channels A and B to calculate the cospectrum;
-	\item divide all periodograms and the cospectrum by the smoothed and squared FAD, and multiply by 2.
-	\end{itemize}
-\end{enumerate}
+To test this, we produced a number of different synthetic datasets as explained in Section~\ref{sec:wndeadtime}, containing different combinations of QPOs and broadband noise components. 
+We first calculated the periodogram and cospectrum of the dead time-free data, averaged over 128-s intervals.
+Then, we applied a dead time filter to the event list and applied the FAD correction, as described in Section~\ref{sec:fad}
 
-All spectra were then expressed in fractional rms \citep{BelloniHasinger90,Miyamoto+91} normalization, where the integral of the fitted spectral components returns directly its fractional rms.
-In the rms normalization, the values of each point of the periodogram should be consistent between the dead time-free and the FAD-corrected periodograms.
-We first checked visually that the spectra (white-noise subtracted in the case of periodograms) after FAD correction were all consistent with the dead time-free periodogram. 
-Then, we fitted all spectra with the model which produced the simulated data and checked that the values were always consistent with the input model parameters and the fit on the dead time-free periodogram.
-Finally, we verified that the total rms of the FAD-corrected spectra was always consistent with the total rms of the dead time-affected cospectrum \textit{times the ratio between incident and detected photons}, using the count rates before and after applying the dead time filter.
-To calculate this rms, we fitted the spectra with two Lorentzian components, and used their amplitude in the calculation.
-In this normalization, the amplitude of a Lorentzian gives the total rms squared of the component.
+All spectra were then expressed in fractional \rms \citep{BelloniHasinger90,Miyamoto+91} normalization, where the integral of the fitted power spectral components over the frequency returns directly its fractional \rms.
+In the \rms normalization, the values of each point of the periodogram, after white noise subtraction, should be consistent between the dead time-free and the FAD-corrected periodograms.
+We fitted all spectra with the model which produced the simulated data and checked if the \rms values were consistent with the fit on the dead time-free periodogram.
+To calculate this \rms, we fitted the spectra with two Lorentzian components, and integrated the model over the full frequency range.
 For periodograms, the model included also a constant offset to account for the white noise level.
-An example of this analysis is shown in Figure~\ref{fig:pds} (upper panel).
+An example of this analysis is shown in Figure~\ref{fig:pds}.
 
-The simulations show that the shape of the periodogram is precisely corrected by the FAD procedure \textit{if} the input light curves have the same count rate. 
-However, in real life the two detectors can receive slightly different signals due to slightly different responses, the presence of gaps inside the PSF, etc.
-Simulating datasets with slightly different light curve mean rates in the two channels, we indeed find that the performance of the FAD correction degrades.
-The degradation is higher for higher count rates and higher difference between the two channels. 
-Since the exact degradation is dependent on the shape of the periodograms, we recommend to FAD-correct both the periodogram and the cospectrum, and verify visually that the white-noise subtracted periodogram and the cospectrum are consistent.
-For example, look for bumps or valleys in the white noise-subtracted periodogram that are not present in the cospectrum, and
-trust the additional signal to noise of the periodogram only in the regions where the two are consistent.
 
-\section{Application to Cyg X-1}\label{sec:realdata}
-In this Section we apply the FAD correction to a \nustar observation of Cyg X-1.
-This source was discovered in the early days of X-ray astronomy \citep{Bowyer+65} and it is among the best studied X-ray sources in the sky.
-It is a persistent black hole X-ray binary, alternating soft and hard spectral states with distinct timing and spectral features \citep[see, e.g., ][]{Grinberg+13}.
-The observation we analyze here was taken during the source's soft state, that is characterized by a non-thermal X-ray spectrum, stable radio jets and, what matters the most here, distinct aperiodic variability that is well fitted by an exponential cutoff power law with index $\sim1$ (see, e.g., \citealt{Gilfanov+00}).
-We followed the procedure described in \sref{sec:correction}, dividing the light curves in 512-s segments and smoothing the squared FAD with a Gaussian window of 1-s width (512 bins).
-The results are shown in Figure~\ref{fig:pds}, lower panel for comparison with the simulations. 
+\subsection{Simulation results and discussion}\label{sec:caveat}
+\begin{figure*}
+    \plotone{errors.pdf}
+    \caption{Relative overestimation of FAD with respect to \rms, versus \rms, as calculated from the cospectrum.  
+    We encoded the frequency of the feature in the color, and the incident rate in the size of the scatter points.
+    From this visualization we see two regimes: below $\sim$40\% fractional \rms, the errors are dominated by statistical errors. 
+    These errors will simply decrease when we average more data, as we expect from statistical errors.
+    Over $\sim$40\% fractional \rms, the errors are significantly skewed towards an overestimation of the \rms, and this is 
+    clearly truer when the incident rate \textit{and} the \rms are high.}
+    \label{fig:errors}
+\end{figure*}
 
-We fitted the four spectra of Cyg X-1 with an exponential cutoff power law. 
-For periodograms, we added to the models an additive constant to account for the white noise level.
-In all cases, the estimates returned by the fit were consistent between the different spectra in all but the amplitude parameter of the power law curve.
-We used this amplitude to calculate the ratios between the rms measured by the deadtime-affected cospectrum and the FAD-corrected spectra.
-The increase of rms between the dead time-affected cospectrum and the FAD-corrected cospectrum and periodograms is consistent to 2\% with the ratio $r_{in}/r_{det}$, where $r_{in}$ is the incident count rate, and $r_{det}$ is the detected count rate,
-given by
+The simulations show that the shape of the periodogram is precisely corrected by the FAD procedure if (1) \textit{the input light curves have the same count rate} and (2) \textit{for values of the input count rate and \rms that are not too extreme}. 
+The first caveat turns out, in practice, to be only a big issue for the single-channel periodogram, but \textit{not} for cospectra and total-intensity periodograms. 
+At high count rates, single-channel periodograms are corrected very well only if the two channels have very similar count rates, with the requirement being unsurprisingly stricter and stricter as the count rate increases.
+However, we find that the total-intensity periodogram and the cospectrum remains well corrected by the FAD even if the count rate in the two channels differs by 30\% in most cases.
+Therefore, we recommend to use the FAD very carefully with single-channel periodograms, which should not be an issue given that the total-intensity periodogram is more sensitive and more convenient to use anyway. 
+A comparison with the cospectrum, that is not affected by white noise level distortions, is always recommended. 
 
-\begin{equation}
-r_{det} = \frac{r_{in}}{1 + \deadt r_{in}}
-\end{equation} 
-(using the standard non-paralyzable dead time formula, where \deadt is dead time) which is the drop of rms expected from the effect of dead time \citep{Bachetti+15}.
+The second caveat needs some attention. 
+We find that the FAD correction consistently overestimates the integrated \rms when the count rate and \rms are \textit{both} very high, \textit{in particular at low frequency} (See Figure~\ref{fig:errors}).
+At $\sim$200 ct/s and 30\% \rms, the relative error is below 5\% (meaning that if the \rms is 30\%, the measured \rms is between 30 and 32\%!) and it is symmetrically distributed around 0, as expected from statistical errors. 
+At higher incident rates and \rms, the error distribution skews towards positive relative errors, implying an overestimation of the \rms.
+This should not be a problem in most cases, where the \rms is used as a rough indicator for spectral state.
+If very precise measurements of \rms are needed (for example, to calculate \rms/energy spectra), it is safer to account for this through simulations.
+As a rough rule-of-thumb, the relative error on the fractional \rms increases \textit{linearly} with the count rate and \textit{quadratically} with \rms.
+A practical way to estimate this effect during analysis is to apply the FAD, obtain a best fit model, calculate the \rms, then use the codes we shared with the Jupyter notebooks to simulate a number of realizations of the light curve, evaluating what is the amount of overestimation involved.
+
+%%%%%%%%%%%%%%%%%%%%%%%% SECTION 6 %%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%\section{Example: Cyg X-1 \nustar dataset}
+%We tested the method also on real data of several bright sources observed by \nustar.
+%As an example, we report here one such test done on \nustar data of the black hole binary Cyg~X-1 together with the steps to reproduce our analysis, using the linked Jupyter notebook if needed.
+%
+%Cyg X-1 is a persistent black hole X-ray binary, alternating soft and hard spectral states with distinct timing and spectral features \citep[see, e.g., ][]{Grinberg+13}.
+%We downloaded standard data products of 
+%The observation we analyze here was taken during the source's soft state, that is characterized by a non-thermal X-ray spectrum, stable radio jets and, what matters the most here, distinct aperiodic variability that is well fitted by an exponential cutoff power law with index $\sim1$ (see, e.g., \citealt{Gilfanov+00}).
+%We followed the procedure described in \sref{sec:correction}, dividing the light curves in 512-s segments and smoothing the squared FAD with a Gaussian window of 1-s width (512 bins).
+%The results are shown in Figure~\ref{fig:pds}, lower panel for comparison with the simulations. 
+%
+%We fitted the four spectra of Cyg X-1 with an exponential cutoff power law. 
+%For periodograms, we added to the models an additive constant to account for the white noise level.
+%In all cases, the estimates returned by the fit were consistent between the different spectra in all but the amplitude parameter of the power law curve.
+%We used this amplitude to calculate the ratios between the \rms measured by the deadtime-affected cospectrum and the FAD-corrected spectra.
+%The increase of \rms between the dead time-affected cospectrum and the FAD-corrected cospectrum and periodograms is consistent to 2\% with the ratio $r_{in}/r_{det}$, where $r_{in}$ is the incident count rate, and $r_{det}$ is the detected count rate,
+%given by
+%
+%\begin{equation}
+%r_{det} = \frac{r_{in}}{1 + \deadt r_{in}}
+%\end{equation} 
+%(using the standard non-paralyzable dead time formula, where \deadt is dead time) which is the drop of \rms expected from the effect of dead time \citep{Bachetti+15}.
+
+%%%%%%%%%%%%%%%%%%%%%%%% SECTION 7 %%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Conclusions}
 In this Letter we described a method to correct the normalization of dead time-affected periodograms.
@@ -472,13 +544,16 @@ This method is valid in principle for
 In general, we recommend applying the FAD correction to both the periodogram and the cospectrum. 
 The periodogram, if obtained by the sum of the light curves, can yield a higher signal-to-noise ratio.
 However, the white noise level subtraction is not always very precise due to mismatches in the mean count rate in the two light curves. 
-A comparison with the FAD-corrected cospectrum, to verify visually the white noise subtraction, is always recommended.
-It is important to be reasonably sure of the white noise level of the periodogram, as the white noise subtraction is the most important step when calculating the significance of a given feature in the periodogram \citep[e.g.][]{Barret+12,Huppenkothen+17}.
-The cospectrum has the advantage of not requiring white noise level subtraction.
+A comparison with the FAD-corrected cospectrum, to verify visually the white noise subtraction, is always recommended: the white noise subtraction is the most important step when calculating the significance of a given feature in the periodogram \citep[e.g.][]{Barret+12,Huppenkothen+17}.
+The cospectrum has indeed the advantage of not requiring white noise level subtraction.
 
+A number of jupyter notebooks is available the address \href{https://github.com/matteobachetti/deadtime-paper-II}{https://github.com/matteobachetti/deadtime-paper-II} to reproduce the full analysis plotted in the Figures of this paper, plus more examples of application of these techniques to simulated and real data.
+The full algorithm described in Section~\ref{sec:fad} is contained in the \texttt{fad\_correction.py} file in the notebooks directory, for reference.
 In all cases, we find that the adjustment of the white noise standard deviation in the periodogram and the cospectrum works remarkably well, allowing to make a confident analysis of X-ray variability even in sources where this was precluded until now.
+Only in cases where the count rate and the \rms are \textit{both} very high ($>$500 ct/s incident, $>$40\% resp.), the FAD correction leads to an overestimation the \rms, even if the white noise level of the periodogram remains flat.
+In these case, we provide some example simulation code to estimate this effect in the notebooks.
 This software will be merged into the main repository of \texttt{stingray} before publication.
-A number of jupyter notebooks will also be posted at the address \href{https://github.com/matteobachetti/deadtime-paper-II}{https://github.com/matteobachetti/deadtime-paper-II} to reproduce the full analysis plotted in the Figures of this paper, plus more examples of application of these techniques to simulated and real data.
+
 
 \acknowledgments
 We thank David W. Hogg for useful discussions on the topic of Fourier analysis.
@@ -559,6 +634,9 @@ Lewin, W. H.~G., van Paradijs, J., \& van~der Klis, M. 1988, SSRv, 46, 273
 Miyamoto, S., Kimura, K., Kitamoto, S., Dotani, T., \& Ebisawa, K. 1991, ApJ,
   383, 784
 
+\bibitem[{{Timmer} \& {Koenig}(1995)}]{timmer1995}
+{Timmer}, J., \& {Koenig}, M. 1995, \aap, 300, 707
+
 \bibitem[{Vikhlinin {et~al.}(1994)Vikhlinin, Churazov, \&
   Gilfanov}]{Vikhlinin+94}
 Vikhlinin, A., Churazov, E., \& Gilfanov, M. 1994, 287, 73
@@ -569,6 +647,7 @@ Zhang, W., Jahoda, K., Swank, J.~H., Morgan, E.~H., \& Giles, A.~B. 1995, ApJ,
   449, 930
 
 \end{thebibliography}
+
 \end{document}
 
 % End of file `sample61.tex'.
