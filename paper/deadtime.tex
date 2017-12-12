@@ -317,7 +317,7 @@ The different behavior of Fourier amplitude differences under pure Poisson noise
 \label{fig:fourierdiff}
 \end{figure*}
 
-Let us consider two identical and independent detectors observing the same variable source, producing independent and strictly simultaneous time series, with identical binning, $\mathbf{x} = \{x_k\}_{k=1}^N$ and $\mathbf{y} = \{y_k\}_{k=1}^N$. For a stochastic process (e.g.\ $1/\nu$-type red noise), the Fourier amplitudes will vary as a function of $N_{\mathrm{phot}}P(\nu)/4$, where $P(\nu)$ (Leahy-normalized, \citealt{Leahy+83}) is the shape of the power spectrum underlying the stochastic process, and $N_{\mathrm{phot}}$ denotes the number of photons in a light curve. If the two detectors observe the same source simultaneously, the amplitudes and phases of the stochastic process will be shared among $\mathbf{x}$ and $\mathbf{y}$, while each light curve will be affected \textit{independently} by both the photon counting noise in the detector, as well as the dead time process. 
+Let us consider two identical and independent detectors observing the same variable source, producing independent and strictly simultaneous time series, with identical binning, $\mathbf{x} = \{x_k\}_{k=1}^N$ and $\mathbf{y} = \{y_k\}_{k=1}^N$. For a stochastic process (e.g.\ $1/\nu$-type red noise), the Fourier amplitudes will vary as a function of $N_{\mathrm{phot}}P(\nu)/4$, where $P(\nu)$ (Leahy-normalized, \citealt{Leahy+83}) is the shape of the power spectrum underlying the stochastic process, and $N_{\mathrm{phot}}$ denotes the number of photons in a light curve. If the two detectors observe the same source simultaneously, the amplitudes and phases of the stochastic process will be shared among $\mathbf{x}$ and $\mathbf{y}$, while each light curve will be affected \textit{independently} by the photon counting noise in the detector, as well as the dead time process. 
 Dead time can be considered a convolution on the signal \citep{Vikhlinin+94}. 
 As such, for the convolution theorem we will have that the Fourier transform $\mathcal{F}$ of dead time-affected light curves will result in a \textit{product} of the Fourier transform of the signal $\mathcal{S}$ times the Fourier transform of the dead time filter $\mathcal{D}$:
 \begin{equation}
@@ -326,14 +326,14 @@ As such, for the convolution theorem we will have that the Fourier transform $\m
 For a large enough number of data points $N$, the complex Fourier amplitudes $S_j$ will be composed of a sum of two independent random normal variables: $S_j = S_{sj} + S_{nj}$, with $\Re (S_{sj}) \sim \Normal(0, \sigma_{sj}^2)$ and $\Re(S_{nj}) \sim \Normal(0, \sigma_n^2)$, and similarly for the imaginary parts.
 $\sigma_{sj}^2 = \sigma_{s}^2(\nu) = N_\mathrm{phot}P(\nu)/4$ (where $N_{\mathrm{phot}} = \sum_{k=1}^{N}{x_k}$) is given by the power spectrum of the underlying stochastic process and is frequency-dependent. However, $\sigma_n^2 = N_\mathrm{phot}/2$ is not. 
 Note that $S_{xsj} = S_{ysj}$, because the amplitudes of the stationary noise process will be the same for the Fourier transforms of $\mathbf{x}$ and $\mathbf{y}$, while the components due to white noise differ between the two time series.
-Moreover, the dead time filter will only depend on the mean count rate, which is again the same in the two light curves.
+Moreover, the dead time filter will only depend on the count rate, which is again the same in the two light curves.
 Thus, the difference between the Fourier amplitudes for the two time series $\mathbf{x}$ and $\mathbf{y}$ will be:
 \begin{equation}
 F_{xj} - F_{yj} = (S_{xj} - S_{yj})\cdot D_j = (S_{xnj} - S_{ynj})\cdot D_j
 \end{equation}
 So, in practice, the real and imaginary parts of the Fourier amplitude \textit{difference} between two simultaneous lightcurves of the same signal from identical detectors will be a random variate of the form $\Normal(0, 2\sigma_{n}^2)$ for both the imaginary and real parts, \textit{multiplied} by the Fourier transform of the dead time filter.
 But the squared norm of the latter \textit{is also what is distorting the periodograms}!
-However, in the case of periodograms the source signal is mingled with the shape of $|\mathcal{D}|^2$, while in this case we have a \textit{constant-scatter} random variable which is modulated by the same shape. Therefore, we can try to extract the shape of $|\mathcal{D}|^2$ from the Fourier amplitude differences from the two channels, and use it to correct the shape of the periodogram.
+However, in the case of periodograms the source power spectrum is mingled with the shape of $|\mathcal{D}|^2$, while in this case we have a \textit{constant-scatter} random variable which is modulated by the same shape. Therefore, we can try to extract the shape of $|\mathcal{D}|^2$ from the Fourier amplitude differences from the two channels, and use it to correct the shape of the periodogram.
 
 %
 %
@@ -416,22 +416,22 @@ After correction, the powers follow remarkably well the expected Laplace and $\c
 \label{fig:dist}
 \end{figure*}
 
-Let us simulate two constant light curves with an incident mean count rate of 400 counts/sec and a dead time of 2.5 ms, as we would expect from two identical detectors observing the same stable X-ray source.
+As laid out in Section \ref{sec:fourierdiff}, the difference of Fourier amplitudes from two independent but identical detectors shows no source variability, but \textit{still shows the same distortion} due to dead time (See Figure ~\ref{fig:fourierdiff}, left panel, where this is shown with red noise).
+Let us simulate two constant light curves with an incident mean count rate of 400 counts/sec and a dead time of 2.5 ms, as we would expect from the two identical detectors of \nustar observing the same stable X-ray source.
 The Fourier amplitudes of the light curves from the two detectors are heavily distorted by dead time, with the characteristic damped oscillator-like shape \citep{Vikhlinin+94,Zhang+95}  (Figure ~\ref{fig:fourierdiff}, middle panel). 
-As laid out in Section \ref{sec:fourierdiff}, the difference of Fourier amplitudes from two independent but identical detectors shows no source variability, but \textit{still shows the same distortion} due to dead time.
-Therefore, using the difference between the Fourier amplitudes in two detectors, we can in principle renormalize the power spectrum so that only the source variability alters its otherwise flat shape.
+Therefore, using the difference between the Fourier amplitudes in two detectors, we can in principle renormalize the periodogram so that only the source variability alters its otherwise flat shape.
 
-As shown in Figure~\ref{fig:fourierdiff} (right panel), the single-channel Fourier amplitudes are proportional to the difference of the Fourier amplitudes in different realizations, with a constant factor $1/\sqrt{2}$.
+As shown in Figure~\ref{fig:fourierdiff} (right panel), the single-channel Fourier amplitudes are proportional on average to the difference of the Fourier amplitudes in different realizations, with a constant factor $1/\sqrt{2}$.
 Therefore, we expect that the periodogram will be proportional to the square of the Fourier amplitude difference, divided by 2.
-Let us try to \textit{divide the power spectrum by a smoothed version of the squared Fourier differences}, and multiply by 2.
+Let us try to \textit{divide the periodogram by a smoothed version of the squared Fourier differences}, and multiply by 2.
 For smoothing, we used a Gaussian running window with a window width of 50 bins.
 Given that the initial binning had 50 bins/Hz, this interpolation allows an aggressive smoothing over bins whose y value does not change significantly.
 We call this procedure the \textbf{Fourier Amplitude Difference} (hereafter FAD) \textbf{correction}.
 
-The correction is depicted in Figure~\ref{fig:comparison}. 
+The results of this correction are shown in Figure~\ref{fig:comparison}. 
 Starting from a heavily distorted distribution of the powers, applying the FAD correction ``flattens'' remarkably well the white noise level of the periodogram and the distribution of the scatter of the white noise periodogram and cospectrum. 
 Also, it reinstates a correct distribution of powers, following the expected $\chi^2_2$ distribution \citep{Lewin+88} very closely. 
-Analogously, the corrected cospectrum will follow the expected Laplace distribution \citep{Huppenkothen & Bachetti, sub.}.
+Analogously, the corrected cospectrum will follow the expected Laplace distribution (Huppenkothen \& Bachetti, sub.).
 While the original dead time-affected cospectrum had a frequency-dependent modification to the \rms level, the FAD-corrected cospectrum gets back to a frequency-independent shape, like in the dead time-free case.
 
 %%%%%%%%%%%%%%%%%%%%%%%% SECTION 5 %%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -469,7 +469,7 @@ In practice, the FAD correction algorithm in a generic case would work as follow
     \label{fig:pds}
 \end{figure*}
 
-We are now ready to verify the last step: is the FAD-corrected power spectrum equivalent (albeit with some loss of sensitivity due to the lower number of photons) to the dead time-free power spectrum?
+We are now ready to verify the last step: is the FAD-corrected periodogram equivalent (albeit with some loss of sensitivity due to the lower number of photons) to the dead time-free periodogram?
 To test this, we produced a number of different synthetic datasets as explained in Section~\ref{sec:wndeadtime}, containing different combinations of QPOs and broadband noise components. 
 We first calculated the periodogram and cospectrum of the dead time-free data, averaged over 128-s intervals.
 Then, we applied a dead time filter to the event list and applied the FAD correction, as described in Section~\ref{sec:fad}
@@ -490,7 +490,7 @@ An example of this analysis is shown in Figure~\ref{fig:pds}.
     From this visualization we see two regimes: below $\sim$40\% fractional \rms, the errors are dominated by statistical errors. 
     These errors will simply decrease when we average more data, as we expect from statistical errors.
     Over $\sim$40\% fractional \rms, the errors are significantly skewed towards an overestimation of the \rms, and this is 
-    clearly truer when the incident rate \textit{and} the \rms are high.}
+    clearly truer when the incident rate \textit{and} the \rms are high, and the frequency relatively low.}
     \label{fig:errors}
 \end{figure*}
 
