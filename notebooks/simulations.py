@@ -881,5 +881,3 @@ def fit_pds_slope_vs_rms(file, toler_d_clean=0.01,
     cb = mpl.colorbar.ColorbarBase(ax2, cmap=cmap, norm=norm)
     cb.set_label('Fractional rms')
 
-
-
