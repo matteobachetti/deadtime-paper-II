@@ -2,3 +2,10 @@
 *.log
 notebooks/
 paper/
+v611/
+*.tar
+*.bst
+*.zip
+*.bib
+aas*
+data/
