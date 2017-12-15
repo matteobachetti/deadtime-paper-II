@@ -306,18 +306,20 @@ In \sref{sec:fadsec} we use extensive simulations to show how to use this fact t
 %%%%%%%%%%%%%%%%%%%%%%%% SECTION 2 %%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{On the difference of Fourier amplitudes} \label{sec:fourierdiff}
-%\begin{figure*}
-%\gridline{\fig{rn_fourierdiff.eps}{0.33\textwidth}{(a)}
-%	\fig{wn_fourierdiff.eps}{0.33\textwidth}{(b)}
-%	\fig{fourier_vs_diff_dt.eps}{0.33\textwidth}{(c)}}      
-%\caption{(a): Real-valued Fourier amplitudes derived from many evenly sampled light curves of $500\,\mathrm{s}$ duration with strong $1/f$ red noise (top, in black). On the bottom, we show the \textit{difference} between real-valued Fourier amplitudes as they would be sampled from two independent detectors using the same light curves as in the top panel. In red, we show the the frequency-dependent spread of the distributions, measured by the mean of the absolute values of the curves in each frequency bin. Panel (b) shows the same as panel (a), but using white noise light curves of $5\,\mathrm{s}$ duration affected by dead time. In the case of red noise without dead time, the difference in Fourier amplitudes effectively follows a white noise distribution. Because dead time affects the observed light curves \textit{in the detector} (while red noise is intrinsic to the source), the difference in Fourier amplitudes will still contain the dead time contribution to the Fourier amplitudes, and can thus be used to effectively separate real variability from spurious dead time effects.
-%(c) Scatter distribution of the (averaged over multiple intervals) absolute values of dead time-affected Fourier amplitudes versus the difference of Fourier amplitudes for case (b): their relation is clearly linear, with a factor $1/\sqrt{2}$. \DHN{I don't really understand what (c) adds. Also, why 500s segments in (a) and 5s segments in (b)?}}
-%\label{fig:fourierdiff}
-%\end{figure*}
+
+\begin{figure*}
+\plottwo{rn_fourierdiff}{wn_fourierdiff}
+\caption{Real-valued Fourier amplitudes obtained by single light curves ($\mathcal{F}_1$) and difference between two realizations of the same source light curve ($\mathcal{F}_1 - \mathcal{F}_2$), plotted against each other in two cases: (Left) Strong $1/f$ red noise and no dead time, calculated over many 500\,s segments of the light curve, and (Right) no red noise and strong dead time, calculated over 5\,s segments of the light curve. 
+The red curve gives the frequency-dependent spread of the distributions, measured by the mean of the absolute values of the curves in each frequency bin. 
+The different behavior of Fourier amplitude differences in the two cases is evident: in the deadtime-free case, the Fourier amplitude difference does \textit{not} correlate with the Fourier amplitude, while in the deadtime-affected case, this follows a precise linear relationship.
+}
+\label{fig:fourierdiff}
+\end{figure*}
 
 Let us consider two identical and independent detectors observing the same variable source, producing independent and strictly simultaneous time series, with identical even sampling $\delta t$, $\mathbf{x} = \{x_k\}_{k=1}^N$ and $\mathbf{y} = \{y_k\}_{k=1}^N$. For a stochastic process (e.g.\ $1/\nu$-type red noise), the Fourier amplitudes will vary as a function of $N_{\mathrm{phot}}P(\nu)/4$, where $P(\nu)$ (Leahy-normalized, \citealt{Leahy+83}) is the shape of the power spectrum underlying the stochastic process, and $N_{\mathrm{phot}}$ denotes the number of photons in a light curve. 
 
 If the two detectors observe the same source simultaneously, the amplitudes and phases of the stochastic process will be shared among $\mathbf{x}$ and $\mathbf{y}$, while each light curve will be affected \textit{independently} by the photon counting noise in the detector, as well as the dead time process. 
+
 Dead time can be considered a convolution on the signal \citep{Vikhlinin+94}. 
 Following the convolution theorem the Fourier transform $\mathcal{F}$ of dead time-affected light curves will be the \textit{product} of the Fourier transform of the signal $\mathcal{S}$ and the Fourier transform of the dead time filter $\mathcal{D}$:
 \begin{equation}
@@ -485,7 +487,7 @@ An example of this analysis is shown in Figure~\ref{fig:pds}. \DHN{I feel like F
 \begin{figure*}
     \plotone{errors.pdf}
     \caption{Relative overestimation of FAD with respect to \rms, versus \rms, as calculated from the cospectrum.  
-    We encoded the frequency of the feature in the color, and the incident rate in the size of the scatter points.
+    We encoded in the color the  the incident rate (Top) and the frequency of the feature.
     From this visualization we see two regimes: below $\sim$40\% fractional \rms, the errors are dominated by statistical errors. 
     These errors will simply decrease when we average more data, as we expect from statistical errors.
     Over $\sim$40\% fractional \rms, the errors are significantly skewed towards an overestimation of the \rms, and this is 
