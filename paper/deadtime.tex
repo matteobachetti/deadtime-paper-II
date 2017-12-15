@@ -24,6 +24,7 @@
 %%
 %% using aastex version 6.1
 \documentclass[twocolumn]{aastex61}
+\pdfoutput=1
 
 \usepackage{xspace}
 
@@ -308,7 +309,7 @@ In \sref{sec:fadsec} we use extensive simulations to show how to use this fact t
 \section{On the difference of Fourier amplitudes} \label{sec:fourierdiff}
 
 \begin{figure*}
-\plottwo{rn_fourierdiff}{wn_fourierdiff}
+\plottwo{rn_fourierdiff.pdf}{wn_fourierdiff.pdf}
 \caption{Real-valued Fourier amplitudes obtained by single light curves ($\mathcal{F}_1$) and difference between two realizations of the same source light curve ($\mathcal{F}_1 - \mathcal{F}_2$), plotted against each other in two cases: (Left) Strong $1/f$ red noise and no dead time, calculated over many 500\,s segments of the light curve, and (Right) no red noise and strong dead time, calculated over 5\,s segments of the light curve. 
 The red curve gives the frequency-dependent spread of the distributions, measured by the mean of the absolute values of the curves in each frequency bin. 
 The different behavior of Fourier amplitude differences in the two cases is evident: in the deadtime-free case, the Fourier amplitude difference does \textit{not} correlate with the Fourier amplitude, while in the deadtime-affected case, this follows a precise linear relationship.
@@ -383,19 +384,6 @@ We initially simulated light curves with a very high mean ``count rate'' such th
 Then, the \texttt{hendrics.fake.filter\_for\_deadtime()} function was used to apply a non-paralyzable dead time of 2.5\,ms to the simulated event lists. For more details on the simulated data sets, see also Section \ref{sec:correction} and the available Jupyter notebooks%
 \footnote{\href{https://github.com/matteobachetti/deadtime-paper-II}{https://github.com/matteobachetti/deadtime-paper-II}} \citep[for a description of Jupyter notebooks, see][]{kluyver2016jupyter}.
 After producing these synthetic event lists, we started the standard timing analysis: we produced light curves with a bin time of $\sim0.122$\,ms, and calculated power spectral products (cospectrum, periodogram) over segments of these light curves using \texttt{stingray}.
-
-
-%\subsection{Cyg X-1 \nustar dataset}
-%We tested the method also on real data of several bright sources observed by \nustar.
-%As an example, we report here one such test done on \nustar data of the black hole binary Cyg~X-1 together with the steps to reproduce our analysis, using the linked Jupyter notebook if needed.
-%We downloaded the observation directory of \nustar ObsID 30001011009 (UT 2014-10-04) from the HEASARC using the custom \texttt{heasarc\_pipelines} package (Bachetti et al., ASCL identifier requested). 
-%Equivalently, this download can be done using the online tools provided by HEASARC (e.g. \texttt{xamin}).
-%Starting from the standard cleaned science event files distributed by HEASARC, we applied a barycenter correction using the FTOOL \texttt{barycorr} shipped with HEASOFT 6.21 with the clock correction file n. 71 from the \nustar CALDB.
-%We selected photons in a region of 50\arcsec around the nominal position of Cyg X-1 using the FTOOL \texttt{fselect}.%
-%\footnote{To use the method on different sources, it is sufficient to download a different ObsID and change the region file containing the position of the source}.
-%We used the scripts contained in \texttt{HENDRICS} to load the event lists for the two detectors FPMA and FPMB, calibrate them to translate the PI detectors into energy values, and produced light curves with photons from 3 to 79 keV and binned with uniform time bins of 1/4096$\sim2.44\cdot10^{-4}$\,sec%
-%\footnote{This procedure uses the scripts \texttt{HENreadfile}, \texttt{HENcalibrate} and \texttt{HENlcurve}, as described at\\ \href{http://hendrics.readthedocs.io/en/master/tutorials/quicklook.html}{http://hendrics.readthedocs.io/en/master/tutorials/quicklook.html}}.
-
 
 %%%%%%%%%%%%%%%%%%%%%%%% SECTION 4 %%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -505,30 +493,6 @@ This should not be a problem in most use cases, when the \rms is used as a rough
 If very precise measurements of \rms are needed (for example, to calculate \rms/energy spectra), it is safer to account for this bias through simulations.
 As a rough rule-of-thumb, the bias in the measured fractional \rms increases \textit{linearly} with the count rate and \textit{quadratically} with \rms.
 A practical way to estimate this effect during analysis is to apply the FAD, obtain a best fit model, calculate the \rms, and simulate a number of realizations of the light curve to evaluate the amount of overestimation involved\footnote{relevant code can be found in Jupyter notebooks in the following GitHub repository: \href{https://github.com/matteobachetti/deadtime-paper-II}{https://github.com/matteobachetti/deadtime-paper-II}}.
-
-%%%%%%%%%%%%%%%%%%%%%%%% SECTION 6 %%%%%%%%%%%%%%%%%%%%%%%%%%
-%
-%\section{Example: Cyg X-1 \nustar dataset}
-%We tested the method also on real data of several bright sources observed by \nustar.
-%As an example, we report here one such test done on \nustar data of the black hole binary Cyg~X-1 together with the steps to reproduce our analysis, using the linked Jupyter notebook if needed.
-%
-%Cyg X-1 is a persistent black hole X-ray binary, alternating soft and hard spectral states with distinct timing and spectral features \citep[see, e.g., ][]{Grinberg+13}.
-%We downloaded standard data products of 
-%The observation we analyze here was taken during the source's soft state, that is characterized by a non-thermal X-ray spectrum, stable radio jets and, what matters the most here, distinct aperiodic variability that is well fitted by an exponential cutoff power law with index $\sim1$ (see, e.g., \citealt{Gilfanov+00}).
-%We followed the procedure described in \sref{sec:correction}, dividing the light curves in 512-s segments and smoothing the squared FAD with a Gaussian window of 1-s width (512 bins).
-%The results are shown in Figure~\ref{fig:pds}, lower panel for comparison with the simulations. 
-%
-%We fitted the four spectra of Cyg X-1 with an exponential cutoff power law. 
-%For periodograms, we added to the models an additive constant to account for the white noise level.
-%In all cases, the estimates returned by the fit were consistent between the different spectra in all but the amplitude parameter of the power law curve.
-%We used this amplitude to calculate the ratios between the \rms measured by the deadtime-affected cospectrum and the FAD-corrected spectra.
-%The increase of \rms between the dead time-affected cospectrum and the FAD-corrected cospectrum and periodograms is consistent to 2\% with the ratio $r_{in}/r_{det}$, where $r_{in}$ is the incident count rate, and $r_{det}$ is the detected count rate,
-%given by
-%
-%\begin{equation}
-%r_{det} = \frac{r_{in}}{1 + \deadt r_{in}}
-%\end{equation} 
-%(using the standard non-paralyzable dead time formula, where \deadt is dead time) which is the drop of \rms expected from the effect of dead time \citep{Bachetti+15}.
 
 %%%%%%%%%%%%%%%%%%%%%%%% SECTION 7 %%%%%%%%%%%%%%%%%%%%%%%%%%
 
