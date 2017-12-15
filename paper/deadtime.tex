@@ -459,17 +459,16 @@ In practice, the FAD correction algorithm in a generic case would work as follow
 
 \begin{figure*}
     \plotone{four_qpos.eps}
-    \caption{Periodograms and cospectra from a simulation with four Lorentzian features (at 50, 200, 300 and 400 Hz) with 40-Hz full with at half maximum (FWHM). 
-    We plotted and fitted periodograms and cospectra before and after applying a 2.5\,ms dead time filter
-    The total \rms before dead time was 40\% and the incident photon flux 400 ct/s. 
-    There is no significant difference between FAD-normalized and deadtime-free periodograms and cospectra, that are almost indistinguishable (note also the agreement between all best-fit Lorentzians).
-    For comparison, we also plot the cospectrum without FAD (pink), showing very different amplitudes for the four Lorentzians, due to dead time.
+    \caption{Periodogram from a simulation with four Lorentzian features (at 50, 200, 300 and 400 Hz) with 40-Hz full with at half maximum (FWHM). 
+    We plotted and fitted the periodograms obtained before and after applying a 2.5\,ms dead time filter
+    The total \rms before dead time was 30\% and the incident photon flux 400 ct/s. 
+    There is no significant difference between the FAD-normalized and the deadtime-free periodogram, while the cospectrum without FAD (pink) clearly distorts the curves at different frequencies.
     }
     \label{fig:pds}
 \end{figure*}
 
 We are now ready to verify the last step: is the FAD-corrected periodogram equivalent (albeit with some loss of sensitivity due to the lower number of photons) to the dead time-free periodogram?
-To test this, we produced a number of different synthetic datasets as explained in Section~\ref{sec:wndeadtime}, containing different combinations of QPOs and broadband noise components.\footnote{A number of jupyter notebooks is available in the GitHub repo: \href{https://github.com/matteobachetti/deadtime-paper-II}{https://github.com/matteobachetti/deadtime-paper-II} to reproduce the full analysis plotted in the Figures of this paper and more. The full algorithm described in Section~\ref{sec:fad} is contained in the \texttt{fad\_correction.py} file in the notebooks directory, for reference.}
+To test this, we produced a number of different synthetic datasets as explained in Section~\ref{sec:wndeadtime}, containing different combinations of QPOs and broadband noise components.\footnote{See the notebooks at \href{https://github.com/matteobachetti/deadtime-paper-II}{https://github.com/matteobachetti/deadtime-paper-II} to reproduce the analysis plotted in the Figures of this paper and more. The algorithm described in Section~\ref{sec:fad} is contained in the \texttt{fad\_correction.py} file in the notebooks directory.}
 We first calculated the periodogram and cospectrum of the dead time-free data, averaged over 128-s intervals.
 Then, we applied a dead time filter to the event list and applied the FAD correction, as described in Section~\ref{sec:fad}
 
@@ -484,11 +483,11 @@ An example of this analysis is shown in Figure~\ref{fig:pds}: the FAD successful
 \begin{figure*}
     \plotone{errors.pdf}
     \caption{Relative overestimation of FAD with respect to \rms, versus \rms, as calculated from the cospectrum.  
-    We encoded in the color the  the incident rate (Top) and the frequency of the feature.
+    We encoded in the color the  the incident rate (left) and the frequency of the feature (right).
     From this visualization we see two regimes: below $\sim$40\% fractional \rms, the errors are dominated by statistical errors. 
     These errors will simply decrease when we average more data, as we expect from statistical errors.
-    Over $\sim$40\% fractional \rms, the errors are significantly skewed towards an overestimation of the \rms, and this is 
-    clearly truer when the incident rate \textit{and} the \rms are high, and the frequency relatively low (as can be seen by the fact that the distribution of darker points in both plots is more skewed towards positive values). }
+    Over $\sim$40\% fractional \rms, FAD-corrected spectra overestimate the \rms, and this is 
+    in particular when the incident rate is high, and the frequency relatively low. }
     \label{fig:errors}
 \end{figure*}
 
