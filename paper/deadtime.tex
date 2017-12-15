@@ -334,7 +334,7 @@ Thus, the difference between the Fourier amplitudes for the two time series $\ma
 F_{xj} - F_{yj} = (S_{xj} - S_{yj})\cdot D_j = (S_{xnj} - S_{ynj})\cdot D_j
 \end{equation}
 Because $S_{xsj} = S_{ysj}$, but $S_{xnj} \neq S_{ynj}$ (since the white noise component is formed in each detector separately), the \textit{difference} of the real and imaginary Fourier amplitudes between the two light curves effectively encodes the white noise component only, multiplied by the Fourier transform of the dead time filter.
-This fact effectively allows us to separate out the (source-intrinsic) red noise from the spurious variability introduced by dead time: if we can extract the shape of the dead time filter $|\mathcal{D}|^2$ from the Fourier amplitude differences of the two channels, we can use it to correct the shape of the periodogram. In the following section, we lay this procedure out in more detail, and describe its limits in Section~\ref{sec:caveat}.
+This fact effectively allows us to separate out the (source-intrinsic) red noise from the spurious variability introduced by dead time: if we can extract the shape of the dead time filter $|\mathcal{D}|^2$ from the Fourier amplitude differences of the two detectors, we can use it to correct the shape of the periodogram. In the following section, we lay this procedure out in more detail, and describe its limits in Section~\ref{sec:caveat}.
 
 %
 %
@@ -393,7 +393,7 @@ After producing these synthetic event lists, we started the standard timing anal
 %Starting from the standard cleaned science event files distributed by HEASARC, we applied a barycenter correction using the FTOOL \texttt{barycorr} shipped with HEASOFT 6.21 with the clock correction file n. 71 from the \nustar CALDB.
 %We selected photons in a region of 50\arcsec around the nominal position of Cyg X-1 using the FTOOL \texttt{fselect}.%
 %\footnote{To use the method on different sources, it is sufficient to download a different ObsID and change the region file containing the position of the source}.
-%We used the scripts contained in \texttt{HENDRICS} to load the event lists for the two detectors FPMA and FPMB, calibrate them to translate the PI channels into energy values, and produced light curves with photons from 3 to 79 keV and binned with uniform time bins of 1/4096$\sim2.44\cdot10^{-4}$\,sec%
+%We used the scripts contained in \texttt{HENDRICS} to load the event lists for the two detectors FPMA and FPMB, calibrate them to translate the PI detectors into energy values, and produced light curves with photons from 3 to 79 keV and binned with uniform time bins of 1/4096$\sim2.44\cdot10^{-4}$\,sec%
 %\footnote{This procedure uses the scripts \texttt{HENreadfile}, \texttt{HENcalibrate} and \texttt{HENlcurve}, as described at\\ \href{http://hendrics.readthedocs.io/en/master/tutorials/quicklook.html}{http://hendrics.readthedocs.io/en/master/tutorials/quicklook.html}}.
 
 
@@ -422,7 +422,7 @@ Let us simulate two constant light curves with an incident mean count rate of 40
 The Fourier amplitudes of the light curves from the two detectors are heavily distorted by dead time, with the characteristic damped oscillator-like shape \citep{Vikhlinin+94,Zhang+95}  (Figure ~\ref{fig:fourierdiff}, middle panel). 
 Therefore, using the difference between the Fourier amplitudes in two detectors, we can in principle renormalize the periodogram so that only the source variability alters its otherwise flat shape.
 
-As shown in Figure~\ref{fig:fourierdiff} (right panel), the single-channel Fourier amplitudes are proportional on average to the difference of the Fourier amplitudes in different realizations, with a constant factor $1/\sqrt{2}$.
+As shown in Figure~\ref{fig:fourierdiff} (right panel), the single-detector Fourier amplitudes are proportional on average to the difference of the Fourier amplitudes in different realizations, with a constant factor $1/\sqrt{2}$.
 Therefore, we expect that the periodogram will be proportional to the square of the Fourier amplitude difference, divided by 2.
 Let us try to \textit{divide the periodogram by a smoothed version of the squared Fourier differences}, and multiply by 2.
 For smoothing, we used a Gaussian running window with a window width of 50 bins.
@@ -443,16 +443,15 @@ In practice, the FAD correction algorithm in a generic case would work as follow
 \item split the light curves from two independent, identical detectors into segments as one would do to calculate standard averaged periodograms;
 \item for each pair of light curve segments: 
 	\begin{itemize}
-	\item calculate the Fourier transform of each channel separately, and then of the summed channels (hereafter total-intensity); \DHN{You seem to use ``channel'' and ``detector'' interchangeably. Could people get confused when they think channel means energy channel? Just something to be careful with!}
+	\item calculate the Fourier transform of each detector separately, and then of the summed detectors (hereafter total-intensity); 
 	\item save the unnormalized Fourier amplitudes;
 	\item multiply these Fourier amplitudes by $\sqrt{2/N_{ph}}$ (that would give Leahy-normalized periodograms if squared);
-	\item subtract the Leahy-normalized Fourier amplitudes of the two channels between them, \textit{take the absolute value}, and obtain this way the Fourier Amplitude Differences (FAD);
+	\item subtract the Leahy-normalized Fourier amplitudes of the two detectors between them, \textit{take the absolute value}, and obtain this way the Fourier Amplitude Differences (FAD);
 	\item \textit{smooth} the FAD using a Gaussian-window interpolation with a large number of bins, in our case all the bins contained in 1-2 Hz;
-	\item use the separated single-channel and total-intensity \textit{unnormalized} Fourier amplitudes to calculate the periodograms;
-	\item use the unnormalized Fourier amplitudes from channels A and B to calculate the cospectrum; \DHN{These are kind of two different outcomes, right? I mean, you don't *need* to also calculate the normalized cospectrum, do you? Maybe leave this out and mention that you could do the same process with the cospectrum?}
-	\item divide all periodograms and the cospectrum by the smoothed and squared FAD, and multiply by 2.
+	\item use the separated single-detector and total-intensity \textit{unnormalized} Fourier amplitudes to calculate the periodograms (and/or the cospectrum);
+	\item divide all periodograms (and/or the cospectrum) by the smoothed and squared FAD, and multiply by 2.
 	\end{itemize}
-\item normalize the periodograms to the wanted normalization (Leahy or fractional \rms \DHN{Probably want to put citations for fractional rms normalization here rather than further below?}).
+\item normalize the periodograms to the wanted normalization (e.g. \citealt{Leahy+83} or fractional \rms: \citealt{BelloniHasinger90,Miyamoto+91}).
 \end{enumerate}
 
 %%%%%%%%%%%%%%%%%%%%%%%% SECTION 6 %%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -461,11 +460,10 @@ In practice, the FAD correction algorithm in a generic case would work as follow
 \begin{figure*}
     \plotone{four_qpos.eps}
     \caption{Periodograms and cospectra from a simulation with four Lorentzian features (at 50, 200, 300 and 400 Hz) with 40-Hz full with at half maximum (FWHM). 
-    We plotted and fitted periodograms and cospectra before and after applying the dead time filter
+    We plotted and fitted periodograms and cospectra before and after applying a 2.5\,ms dead time filter
     The total \rms before dead time was 40\% and the incident photon flux 400 ct/s. 
-    After applying a dead time of 2.5 ms like in \nustar, the ``detected'' photon flux decreased to $\sim$200 ct/s as expected. 
-    As can be seen from the best-fit curves, there is no significant difference between FAD-normalized and deadtime-free periodograms and cospectra.
-    For comparison, we also plot the cospectrum without FAD (pink), showing very different amplitudes for the four Lorentzians, due to dead time. \DHN{This plot has too much in it. I have a hard time separating out which line is which even knowing what this should show. I would just plot the dead-time free PDStot and FAD-normalized total PDS (for which, by the way, you can't really read the label in the legend. Also, your model components don't seem to be included in the legend? Also, maybe cut this off at 1000 Hz, since there's only more white noise above?}
+    As can be seen from the best-fit curves, there is no significant difference between FAD-normalized and deadtime-free periodograms and cospectra (the curves overlap exactly).
+    For comparison, we also plot the cospectrum without FAD (pink), showing very different amplitudes for the four Lorentzians, due to dead time.
     }
     \label{fig:pds}
 \end{figure*}
@@ -475,13 +473,12 @@ To test this, we produced a number of different synthetic datasets as explained 
 We first calculated the periodogram and cospectrum of the dead time-free data, averaged over 128-s intervals.
 Then, we applied a dead time filter to the event list and applied the FAD correction, as described in Section~\ref{sec:fad}
 
-All spectra were then expressed in fractional \rms \citep{BelloniHasinger90,Miyamoto+91} normalization, where the integral of the fitted power spectral components over the frequency returns directly its fractional \rms.
+All spectra were then expressed in fractional \rms normalization, where the integral of the fitted power spectral components over the frequency returns directly its fractional \rms.
 In the \rms normalization, the values of each point of the periodogram, after white noise subtraction, should be consistent between the dead time-free and the FAD-corrected periodograms.
 We fitted all spectra with the model which produced the simulated data and checked if the \rms values were consistent with the fit on the dead time-free periodogram.
 To calculate this \rms, we fitted the spectra with two Lorentzian components, and integrated the model over the full frequency range.
 For periodograms, the model included also a constant offset to account for the white noise level.
-An example of this analysis is shown in Figure~\ref{fig:pds}. \DHN{I feel like Figure 3 requires a bit more text here. At least a couple of sentences along the lines of ``as we show in Figure 3, the FAD successfully corrects periodograms and cospectra when compared to dead-time free simulated spectra.''}
-
+An example of this analysis is shown in Figure~\ref{fig:pds}: the FAD successfully corrects so well periodograms and cospectra when compared to dead-time free simulated spectra, that in the figure they are almost indistinguishable.
 
 \subsection{Simulation results and discussion}\label{sec:caveat}
 \begin{figure*}
@@ -491,20 +488,20 @@ An example of this analysis is shown in Figure~\ref{fig:pds}. \DHN{I feel like F
     From this visualization we see two regimes: below $\sim$40\% fractional \rms, the errors are dominated by statistical errors. 
     These errors will simply decrease when we average more data, as we expect from statistical errors.
     Over $\sim$40\% fractional \rms, the errors are significantly skewed towards an overestimation of the \rms, and this is 
-    clearly truer when the incident rate \textit{and} the \rms are high, and the frequency relatively low.}
+    clearly truer when the incident rate \textit{and} the \rms are high, and the frequency relatively low (as can be seen by the fact that the distribution of black points in both plots is more skewed towards positive values). }
     \label{fig:errors}
 \end{figure*}
 
 In order to test the robustness of the FAD, we have ran extensive simulations testing how the method performs (1) for a range of different input count rates, leading to dead-time effects of different magnitude in the output periodograms and cospectra, and (2) whenthe light curves do not have the same count rate (since detectors may in reality have slightly different efficiencies).
-The simulations show that the shape of the periodogram is precisely corrected by the FAD procedure if (1) \textit{the input light curves have the same count rate} and (2) \textit{for values of the input count rate and \rms that are not too extreme}. Differing input count rates in different detectors matter in practice only for the single-channel periodogram, but \textit{not} for cospectra and total-intensity periodograms. 
-At high count rates, single-channel periodograms are corrected very well only if the two channels have very similar count rates, and count rates must be more similar athigher count rates in order for the correction to apply.
-However, we find that the total-intensity periodogram and the cospectrum remain well corrected by the FAD even if the count rate in the two channels differs by 30\% in most cases.
-Therefore, we recommend to use the FAD very carefully with single-channel periodograms, which should not be an issue given that the total-intensity periodogram is more sensitive and more convenient to use. 
+The simulations show that the shape of the periodogram is precisely corrected by the FAD procedure if (1) \textit{the input light curves have the same count rate} and (2) \textit{for values of the input count rate and \rms that are not too extreme}. Differing input count rates in different detectors matter in practice only for the single-detector periodogram, but \textit{not} for cospectra and total-intensity periodograms. 
+At high count rates, single-detector periodograms are corrected very well only if the two detectors have very similar count rates, and count rates must be more similar athigher count rates in order for the correction to apply.
+However, we find that the total-intensity periodogram and the cospectrum remain well corrected by the FAD even if the count rate in the two detectors differs by 30\% in most cases.
+Therefore, we recommend to use the FAD very carefully with single-detector periodograms, which should not be an issue given that the total-intensity periodogram is more sensitive and more convenient to use. 
 A comparison with the cospectrum, which is not affected by white noise level distortions, is always recommended. 
 
 However, we find that the FAD correction consistently overestimates the integrated \rms when the count rate and \rms are \textit{both} very high, \textit{in particular at low frequency} (See Figure~\ref{fig:errors}).
-At $\sim$200 ct/s and 30\% \rms, the relative error is below 5\% (meaning that if the true \rms is 30\%, the measured \rms is between 30 and 32\% \DHN{So shouldn't this be something like 28 to 32 \% if it's symmetrical about zero or am I missing something here?}) and it is symmetrically distributed around 0, as expected from statistical uncertainties. 
-At higher incident rates and \rms, the uncertainty distribution is biased towards positive relative errors, implying an overestimation of the \rms. \DHN{This is currently impossible to discern from the plot. Can we improve that plot somehow? I think partly there's so many circles overplotted that it all becomes hard to distinguish.}
+At $\sim$200 ct/s and 50\% \rms, the relative overestimation is below 5\% (meaning that if the true \rms is 50\%, the measured \rms is between 50 and 53\%) and it is symmetrically distributed around 0, as expected from statistical uncertainties. 
+At higher incident rates and \rms, the uncertainty distribution is biased towards positive relative errors, implying an overestimation of the \rms. 
 This should not be a problem in most use cases, when the \rms is used as a rough indicator for spectral state.
 If very precise measurements of \rms are needed (for example, to calculate \rms/energy spectra), it is safer to account for this bias through simulations.
 As a rough rule-of-thumb, the bias in the measured fractional \rms increases \textit{linearly} with the count rate and \textit{quadratically} with \rms.
