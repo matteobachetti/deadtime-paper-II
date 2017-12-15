@@ -539,7 +539,7 @@ def fit_model_to_all_data(file_label, model, rebin_factor=0.02, fmin=0, fmax=204
 
     cs_clean_parest, cs_clean_res = \
         fit_model_to_spectrum(file_label + 'cs_clean.nc', model_cs,
-                              label='Deadtime-free Cospectrum', fig=fig, color='#ff00ff',
+                              label='Deadtime-free Cospectrum', fig=None, color='#ff00ff',
                               rebin_factor=rebin_factor, fmin=fmin, fmax=fmax)
 
     if fit_ref == 'pds':
@@ -554,7 +554,7 @@ def fit_model_to_all_data(file_label, model, rebin_factor=0.02, fmin=0, fmax=204
                               rebin_factor=rebin_factor, fmin=fmin, fmax=fmax)
     cs_norm_parest, cs_norm_res = \
         fit_model_to_spectrum(file_label + 'cs_norm.nc', model_cs,
-                              label='FAD-normalized Cospectrum', fig=fig,
+                              label='FAD-normalized Cospectrum', fig=None,
                               color='r',
                               rebin_factor=rebin_factor,fmin=fmin, fmax=fmax)
     pds_norm_parest, pds_norm_res = \
