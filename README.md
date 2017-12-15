@@ -4,3 +4,5 @@ This repository contains the LaTeX source of the paper submitted to ApJL, a basi
 
 arXiv link to the paper:
 https://arxiv.org/abs/1709.09700
+
+![Real data](real_data.png)
